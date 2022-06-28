@@ -52,6 +52,5 @@ public class ArrayProblems {
             }
             array[0] = last;
         }
-        System.out.println(array);
     }
 }
