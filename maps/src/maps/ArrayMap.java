@@ -91,7 +91,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
                 }
                 entries = newEntry;
             }
-            entries[size] = new SimpleEntry(key, value);
+            entries[size] = new SimpleEntry<>(key, value);
             size++;
             return null;
         }
@@ -143,11 +143,6 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
 
-    // Doing so will give you a better string representation for assertion errors the debugger.
-    @Override
-    public String toString() {
-        return super.toString();
-    }
 
     private static class ArrayMapIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         private final SimpleEntry<K, V>[] entries;
