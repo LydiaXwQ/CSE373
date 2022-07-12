@@ -143,6 +143,12 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
 
+    // Doing so will give you a better string representation for assertion errors the debugger.
+    @Override
+    public String toString() {
+        return super.toString();
+    }
+
     private static class ArrayMapIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         private final SimpleEntry<K, V>[] entries;
         // You may add more fields and constructor parameters
@@ -160,7 +166,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
         @Override
         public Map.Entry<K, V> next() {
-            if(!hasNext()) {
+            if (!hasNext()) {
                 throw new NoSuchElementException();
             } else {
                 index++;
