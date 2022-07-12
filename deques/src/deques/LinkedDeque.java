@@ -13,19 +13,23 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
 
     public LinkedDeque() {
         size = 0;
-        // TODO: replace this with your code
+        front = new Node<>(null, null, null);
+        back = new Node<>(null, front, null);
+        front.next = back;
     }
 
     public void addFirst(T item) {
         size += 1;
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        Node<T> node = new Node<>(item, front, front.next);
+        front.next = node;
+        node.next.prev = node;
     }
 
     public void addLast(T item) {
         size += 1;
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        Node node = new Node<>(item, back.prev, back);
+        node.prev.next = node;
+        back.prev = node;
     }
 
     public T removeFirst() {
@@ -33,8 +37,10 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
             return null;
         }
         size -= 1;
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        T value = front.next.value;
+        front.next = front.next.next;
+        front.next.prev = front;
+        return value;
     }
 
     public T removeLast() {
@@ -42,16 +48,30 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
             return null;
         }
         size -= 1;
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        T value = back.prev.value;
+        back.prev = back.prev.prev;
+        back.prev.next = back;
+        return value;
     }
 
     public T get(int index) {
         if ((index >= size) || (index < 0)) {
             return null;
         }
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        Node<T> curr = null;
+        int mid = size / 2;
+        if (index > mid) {
+            curr = back;
+            for (int i = size - 1; i >= index; i--) {
+                curr = curr.prev;
+            }
+        } else {
+            curr = front;
+            for (int i = 0; i <= index; i++) {
+                curr = curr.next;
+            }
+        }
+        return curr.value;
     }
 
     public int size() {
