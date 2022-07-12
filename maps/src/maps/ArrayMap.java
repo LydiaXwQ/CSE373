@@ -80,7 +80,9 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         // examine whether our arrayMap contains specified key.
         if (containsKey(key)) {
             // case1: our arrayMap contains specified key.
-            return entries[index].setValue(value);
+            V value1 = get(key);
+            entries[index].setValue(value);
+            return value1;
         } else {
             // case2: our ArrayMap doesn't contain the specified key
 
