@@ -9,7 +9,6 @@ import java.util.Objects;
  * @see Map
  */
 public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
-    // TODO: define a reasonable default value for the following field
     private int size;
 
     private int index;
@@ -80,9 +79,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
         // examine whether our arrayMap contains specified key.
         if (containsKey(key)) {
             // case1: our arrayMap contains specified key.
-            V value1 = get(key);
-            entries[index].setValue(value);
-            return value1;
+            return entries[index].setValue(value);
         } else {
             // case2: our ArrayMap doesn't contain the specified key
 
@@ -126,6 +123,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     public boolean containsKey(Object key) {
         for (int i = 0; i < this.size; i++) {
             if (Objects.equals(entries[i].getKey(), key)) {
+                this.index = i;
                 return true;
             }
         }
