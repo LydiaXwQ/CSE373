@@ -14,10 +14,8 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
     public LinkedDeque() {
         size = 0;
         front = new Node<>(null, null, null);
-        back = new Node<>(null, null, null);
+        back = new Node<>(null, front, null);
         front.next = back;
-        back.prev = front;
-
     }
 
     public void addFirst(T item) {
@@ -25,14 +23,13 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
         Node<T> node = new Node<>(item, front, front.next);
         front.next = node;
         node.next.prev = node;
-
     }
 
     public void addLast(T item) {
         size += 1;
-        Node<T> node = new Node<>(item, back.prev, back);
-        back.prev = node;
+        Node node = new Node<>(item, back.prev, back);
         node.prev.next = node;
+        back.prev = node;
     }
 
     public T removeFirst() {
@@ -40,11 +37,10 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
             return null;
         }
         size -= 1;
-        T removeValue = null;
-        removeValue = front.next.value;
+        T value = front.next.value;
         front.next = front.next.next;
         front.next.prev = front;
-        return removeValue;
+        return value;
     }
 
     public T removeLast() {
@@ -52,27 +48,26 @@ public class LinkedDeque<T> extends AbstractDeque<T> {
             return null;
         }
         size -= 1;
-        T removeValue = back.prev.value;
+        T value = back.prev.value;
         back.prev = back.prev.prev;
         back.prev.next = back;
-        return removeValue;
+        return value;
     }
 
     public T get(int index) {
         if ((index >= size) || (index < 0)) {
             return null;
         }
-
+        Node<T> curr = null;
         int mid = size / 2;
-        Node<T> curr;
-        if (index > mid - 1) {
+        if (index > mid) {
             curr = back;
             for (int i = size - 1; i >= index; i--) {
                 curr = curr.prev;
             }
         } else {
-            curr = front.next;
-            for (int i = 0; i < index; i++) {
+            curr = front;
+            for (int i = 0; i <= index; i++) {
                 curr = curr.next;
             }
         }
