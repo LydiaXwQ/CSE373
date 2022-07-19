@@ -8,10 +8,21 @@ import java.util.Map;
  * @see Map
  */
 public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
-    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 1;
+
+    public static void main(String[] args){
+        ChainedHashMap<String, String> map = new ChainedHashMap<>();
+        map.put("KEY", "OLD_VAL");
+        map.put("KEY", "VAL");
+        map.clear();
+        System.out.println(map.get("KEY"));
+    }
+
+    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.80;
     private static final int DEFAULT_INITIAL_CHAIN_COUNT = 2;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 3;
-
+    private static double maxLoad;
+    private int size = 0;
+    private int index;
     /*
     Warning:
     You may not rename this field or change its type.
@@ -39,6 +50,11 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
      *                             Must be > 0.
      */
     public ChainedHashMap(double resizingLoadFactorThreshold, int initialChainCount, int chainInitialCapacity) {
+        this.chains = createArrayOfChains(initialChainCount);
+        for(int i = 0; i < initialChainCount; i++){
+            chains[i] = new ArrayMap<>(chainInitialCapacity);
+        }
+        maxLoad = initialChainCount * chainInitialCapacity * resizingLoadFactorThreshold;
 
     }
 
@@ -71,37 +87,69 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V get(Object key) {
         // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if(containsKey(key)){
+            return chains[key.hashCode() % chains.length].get(key);
+        }
+        return null;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public V put(K key, V value) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if(containsKey(key)){
+            return chains[key.hashCode() % chains.length].put(key, value);
+        } else {
+            chains[key.hashCode() % chains.length].put(key, value);
+            size++;
+            return null;
+        }
     }
 
     @Override
     public V remove(Object key) {
         // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+
+        if(containsKey(key)){
+            size--;
+            return chains[key.hashCode()% chains.length].remove(key);
+        } else {
+            return null;
+        }
     }
 
     @Override
     public void clear() {
         // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        // for(int i = 0; i < chains.length; i++){
+        //     chains[i].clear();
+        // }
+
+        chains = createArrayOfChains(chains.length);
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public boolean containsKey(Object key) {
         // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        int temp = key.hashCode() % chains.length;
+        if(chains[temp] != null){
+            for(Entry<K,V> idk: chains[temp]){
+                if(idk.getKey().equals(key)){
+                    return true;
+                }
+            }
+        }
+
+        return false;
+
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public int size() {
         // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return size;
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
