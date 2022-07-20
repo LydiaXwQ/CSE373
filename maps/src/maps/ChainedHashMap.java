@@ -33,7 +33,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 3;
     private static double threshold = DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
     private static int chainCount = DEFAULT_INITIAL_CHAIN_COUNT;
-    private static double putTempVar = threshold*chainCount;
     private int size = 0;
     /*
     Warning:
@@ -125,22 +124,23 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V get(Object key) {
 
-        //return chains[getHasCode(key)].get(key);
-
-        if (containsKey(key))
-        {
-            return chains[getHasCode(key)].get(key);
-        }
-        return null;
+        return chains[getHasCode(key)].get(key);
+        //
+        // if (containsKey(key))
+        // {
+        //     return chains[getHasCode(key)].get(key);
+        // }
+        // return null;
     }
 
     @Override
     public V put(K key, V value) {
 
-        if (size >= putTempVar)
+        if (size >= threshold*chainCount)
         {
             resize();
         }
+
         V temp = chains[getHasCode(key)].put(key, value);
         if (temp == null)
         {
