@@ -12,14 +12,19 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     public static void main(String[] args)
     {
-        ChainedHashMap<Integer, Integer> map = new ChainedHashMap<>();
-        for (int i = 0; i < 5; i++) {
-            map.put(i, i * i);
-        }
-        map.clear();
-        Iterator<Map.Entry<Integer, Integer>> itr = map.iterator();
-        System.out.println(map.remove(1));
-        System.out.println(itr.hasNext());
+        // ChainedHashMap<Integer, Integer> map = new ChainedHashMap<>();
+        // for (int i = 0; i < 100; i++) {
+        //     map.put(i, i * i);
+        // }
+        //
+        // for(int i = 0; i < 100;i++ )
+        // {
+        //     map.remove(i);
+        // }
+        // map.clear();
+        // Iterator<Map.Entry<Integer, Integer>> itr = map.iterator();
+        // System.out.println(map.remove(1));
+        // System.out.println(itr.hasNext());
 
     }
 
@@ -133,15 +138,23 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             resize();
         }
 
-        if (containsKey(key))
+        V temp = chains[getHasCode(key)].put(key, value);
+        if (temp == null)
         {
-            return chains[getHasCode(key)].put(key, value);
-        } else {
-            chains[getHasCode(key)].put(key, value);
             size++;
-
             return null;
         }
+        return temp;
+
+        // if (containsKey(key))
+        // {
+        //     return chains[getHasCode(key)].put(key, value);
+        // } else {
+        //     chains[getHasCode(key)].put(key, value);
+        //     size++;
+        //
+        //     return null;
+        // }
 
     }
 
