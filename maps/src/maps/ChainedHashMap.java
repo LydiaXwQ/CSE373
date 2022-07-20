@@ -226,6 +226,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         @Override
         public boolean hasNext() {
             // TODO: replace this with your code
+            try{
                 for(int i = index; i < chains.length; i++){
                     if(mapIteratorArray[i] == null){
                         mapIteratorArray[i] = chains[i].iterator();
@@ -234,7 +235,9 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
                         return true;
                     }
                 }
-
+            } catch (Exception NullPointerException){
+                return false;
+            }
             return false;
             //return false;
             //throw new UnsupportedOperationException("Not implemented yet.");
