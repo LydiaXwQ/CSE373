@@ -160,13 +160,22 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V remove(Object key) {
-        if (containsKey(key))
+
+        V temp = chains[getHasCode(key)].remove(key);
+        if (temp != null)
         {
             size--;
-            return chains[getHasCode(key)].remove(key);
-        } else {
-            return null;
+            return temp;
         }
+        return null;
+        //
+        // if (containsKey(key))
+        // {
+        //     size--;
+        //     return chains[getHasCode(key)].remove(key);
+        // } else {
+        //     return null;
+        // }
     }
 
     @Override
