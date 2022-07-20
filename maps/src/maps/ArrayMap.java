@@ -100,25 +100,16 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V remove(Object key) {
 
-        V temp = get(key);
-        if(temp != null)
-        {
+        //if arrayMap doesn't contain the specified key
+        if (containsKey(key)) { // arrayMap contains the key
+            V removeValue = get(key);
             entries[index] = entries[size - 1];
             size--;
             entries[size] = null;
-            return temp;
+            return removeValue;
+        } else { // arrayMap doesn't contain the key
+            return null;
         }
-        return null;
-        // //if arrayMap doesn't contain the specified key
-        // if (containsKey(key)) { // arrayMap contains the key
-        //     V removeValue = get(key);
-        //     entries[index] = entries[size - 1];
-        //     size--;
-        //     entries[size] = null;
-        //     return removeValue;
-        // } else { // arrayMap doesn't contain the key
-        //     return null;
-        // }
     }
 
     @Override
