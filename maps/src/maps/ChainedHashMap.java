@@ -2,6 +2,7 @@ package maps;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * @see AbstractIterableMap
@@ -10,11 +11,8 @@ import java.util.Map;
 public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     public static void main(String[] args){
-        ChainedHashMap<String, String> map = new ChainedHashMap<>();
-        map.put("KEY", "OLD_VAL");
-        map.put("KEY", "VAL");
-        map.clear();
-        System.out.println(map.get("KEY"));
+        int temp = "someKey".hashCode() % 2;
+        System.out.println(temp);
     }
 
     private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.80;
@@ -22,7 +20,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 3;
     private static double maxLoad;
     private int size = 0;
-    private int index;
+    private int index = 0;
     /*
     Warning:
     You may not rename this field or change its type.
@@ -84,11 +82,19 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         return new ArrayMap<>(initialSize);
     }
 
+    private int getHasCode(Object key){
+        if(key == null){
+            return 0;
+        } else {
+            return Math.abs(key.hashCode()) % chains.length;
+        }
+    }
+
     @Override
     public V get(Object key) {
         // TODO: replace this with your code
         if(containsKey(key)){
-            return chains[key.hashCode() % chains.length].get(key);
+            return chains[getHasCode(key)].get(key);
         }
         return null;
         //throw new UnsupportedOperationException("Not implemented yet.");
@@ -96,13 +102,15 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V put(K key, V value) {
+
         if(containsKey(key)){
-            return chains[key.hashCode() % chains.length].put(key, value);
+            return chains[getHasCode(key)].put(key, value);
         } else {
-            chains[key.hashCode() % chains.length].put(key, value);
+            chains[getHasCode(key)].put(key, value);
             size++;
             return null;
         }
+
     }
 
     @Override
@@ -111,7 +119,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
         if(containsKey(key)){
             size--;
-            return chains[key.hashCode()% chains.length].remove(key);
+            return chains[getHasCode(key)].remove(key);
         } else {
             return null;
         }
@@ -131,16 +139,18 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public boolean containsKey(Object key) {
         // TODO: replace this with your code
-        int temp = key.hashCode() % chains.length;
-        if(chains[temp] != null){
-            for(Entry<K,V> idk: chains[temp]){
-                if(idk.getKey().equals(key)){
-                    return true;
-                }
-            }
-        }
+        return chains[getHasCode(key)].containsKey(key);
 
-        return false;
+        // int temp = getHasCode(key);
+        // if(chains[temp] != null){
+        //     for(Entry<K,V> idk: chains[temp]){
+        //         if(idk.getKey().equals(key)){
+        //             return true;
+        //         }
+        //     }
+        // }
+        //
+        // return false;
 
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
@@ -149,6 +159,12 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     public int size() {
         // TODO: replace this with your code
         return size;
+        //throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    public int index() {
+        // TODO: replace this with your code
+        return index;
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
@@ -170,22 +186,62 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
      */
     private static class ChainedHashMapIterator<K, V> implements Iterator<Map.Entry<K, V>> {
         private AbstractIterableMap<K, V>[] chains;
+        private int index = 0;
+        //private Entry<K,V> entry = null;
+        private final Iterator<Entry<K,V>>[] mapIteratorArray;
         // You may add more fields and constructor parameters
 
         public ChainedHashMapIterator(AbstractIterableMap<K, V>[] chains) {
+
             this.chains = chains;
+            this.mapIteratorArray = new Iterator[chains.length];
         }
 
         @Override
         public boolean hasNext() {
             // TODO: replace this with your code
-            throw new UnsupportedOperationException("Not implemented yet.");
+            for(int i = index; i < chains.length; i++){
+                if(mapIteratorArray[i] == null){
+                    mapIteratorArray[i] = chains[i].iterator();
+                }
+                if(mapIteratorArray[i].hasNext()){
+                    return true;
+                }
+            }
+            return false;
+            //throw new UnsupportedOperationException("Not implemented yet.");
         }
 
         @Override
         public Map.Entry<K, V> next() {
             // TODO: replace this with your code
-            throw new UnsupportedOperationException("Not implemented yet.");
+
+            if(hasNext()){
+
+                for(int i = index; i < chains.length; i++){
+                    if(mapIteratorArray[i].hasNext()){
+                        return mapIteratorArray[i].next();
+                    }
+                }
+
+            }
+            throw new NoSuchElementException() ;
+
+            //throw new UnsupportedOperationException("Not implemented yet.");
         }
     }
+
+
+    //                 for(int j = 0; j < chains[i].entrySet())
+    //
+    //
+    //     for(Entry<K,V> temp: chains[i]){
+    //     if(temp == null){
+    //         break;
+    //     }
+    //     entry = temp;
+    //     index = i;
+    //     return true;
+    // }
+
 }
