@@ -77,24 +77,37 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V put(K key, V value) {
         // examine whether our arrayMap contains specified key.
-        if (containsKey(key)) {
-            // case1: our arrayMap contains specified key.
-            return entries[index].setValue(value);
-        } else {
-            // case2: our ArrayMap doesn't contain the specified key
 
-            // if there is no extra space for the new key and value. double entry length.
+        if(get(key) == null){
             if (entries.length == size) {
                 SimpleEntry<K, V>[] newEntry = new SimpleEntry[entries.length * 2];
-                for (int i = 0; i < size; i++) {
-                    newEntry[i] = entries[i];
-                }
+                System.arraycopy(entries, 0, newEntry, 0, size);
                 entries = newEntry;
             }
             entries[size] = new SimpleEntry<>(key, value);
             size++;
             return null;
         }
+        return entries[index].setValue(value);
+
+        // if (containsKey(key)) {
+        //     // case1: our arrayMap contains specified key.
+        //     return entries[index].setValue(value);
+        // } else {
+        //     // case2: our ArrayMap doesn't contain the specified key
+        //
+        //     // if there is no extra space for the new key and value. double entry length.
+        //     if (entries.length == size) {
+        //         SimpleEntry<K, V>[] newEntry = new SimpleEntry[entries.length * 2];
+        //         for (int i = 0; i < size; i++) {
+        //             newEntry[i] = entries[i];
+        //         }
+        //         entries = newEntry;
+        //     }
+        //     entries[size] = new SimpleEntry<>(key, value);
+        //     size++;
+        //     return null;
+        // }
     }
 
     @Override
