@@ -30,7 +30,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private static double threshold = DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
     private static int chainCount = DEFAULT_INITIAL_CHAIN_COUNT;
     private int size = 0;
-    private int index = 0;
     /*
     Warning:
     You may not rename this field or change its type.
@@ -156,11 +155,9 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         // TODO: replace this with your code
 
         ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
-        while(idk.hasNext()){
+        while(size > 0){
             remove(idk.next().getKey());
         }
-        remove(idk.next().getKey());
-        size = 0;
     }
 
     @Override
