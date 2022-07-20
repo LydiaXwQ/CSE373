@@ -13,19 +13,14 @@ import java.util.NoSuchElementException;
 public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     public static void main(String[] args){
-        // ChainedHashMap<Integer, Integer> map = new ChainedHashMap<>();
-        // for (int i = 0; i < 5; i++) {
-        //     map.put(i, i * i);
-        // }
-        // Iterator<Map.Entry<Integer, Integer>> itr = map.entrySet().iterator();
-        // for(Map.Entry<Integer, Integer> temp : map.entrySet()){
-        //
-        // }
-        // while (itr.hasNext()) {
-        //     itr.next();
-        // }
-        // System.out.println(itr.next());
-        //System.out.println(itr.next());
+        ChainedHashMap<Integer, Integer> map = new ChainedHashMap<>();
+        for (int i = 0; i < 5; i++) {
+            map.put(i, i * i);
+        }
+        map.clear();
+        Iterator<Map.Entry<Integer,Integer>> itr = map.iterator();
+        System.out.println(itr.next());
+
 
     }
 
@@ -164,6 +159,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         while(idk.hasNext()){
             remove(idk.next().getKey());
         }
+        remove(idk.next().getKey());
         size = 0;
     }
 
