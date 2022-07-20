@@ -147,11 +147,11 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public void clear() {
         // TODO: replace this with your code
-        // for(int i = 0; i < chains.length; i++){
-        //     chains[i].clear();
-        // }
-
-        chains = createArrayOfChains(chains.length);
+        ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
+        while(idk.hasNext()){
+            remove(idk.next());
+        }
+        //chains = createArrayOfChains(chains.length);
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
