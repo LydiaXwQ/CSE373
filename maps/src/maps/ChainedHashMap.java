@@ -1,5 +1,6 @@
 package maps;
 
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -90,6 +91,18 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
     }
 
+    private void resize(){
+        ChainedHashMap<K, V> temp = new ChainedHashMap<>(DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD,
+                            DEFAULT_INITIAL_CHAIN_COUNT*2, DEFAULT_INITIAL_CHAIN_CAPACITY);
+        ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
+        while(idk.hasNext()){
+            Entry<K,V> hi = idk.next();
+            temp.put(hi.getKey(),hi.getValue());
+        }
+        chains = temp.chains;
+
+    }
+
     @Override
     public V get(Object key) {
         // TODO: replace this with your code
@@ -102,6 +115,10 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public V put(K key, V value) {
+
+        if(size == (DEFAULT_INITIAL_CHAIN_COUNT*DEFAULT_INITIAL_CHAIN_CAPACITY)){
+            resize();
+        }
 
         if(containsKey(key)){
             return chains[getHasCode(key)].put(key, value);
