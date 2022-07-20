@@ -16,10 +16,11 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         System.out.println(temp);
     }
 
-    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.80;
+    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.75;
     private static final int DEFAULT_INITIAL_CHAIN_COUNT = 2;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 3;
-    private static double maxLoad;
+    private static double threshold = DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
+    private static int chainCount = DEFAULT_INITIAL_CHAIN_COUNT;
     private int size = 0;
     private int index = 0;
     /*
@@ -53,8 +54,8 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         for(int i = 0; i < initialChainCount; i++){
             chains[i] = new ArrayMap<>(chainInitialCapacity);
         }
-        maxLoad = initialChainCount * chainInitialCapacity * resizingLoadFactorThreshold;
-
+        threshold = resizingLoadFactorThreshold;
+        chainCount = initialChainCount;
     }
 
     /**
@@ -100,6 +101,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             temp.put(hi.getKey(),hi.getValue());
         }
         chains = temp.chains;
+        threshold *= 2;
 
     }
 
@@ -110,13 +112,12 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             return chains[getHasCode(key)].get(key);
         }
         return null;
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public V put(K key, V value) {
 
-        if(size == (DEFAULT_INITIAL_CHAIN_COUNT*DEFAULT_INITIAL_CHAIN_CAPACITY)){
+        if(size >= threshold*chainCount){
             resize();
         }
 
@@ -125,6 +126,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         } else {
             chains[getHasCode(key)].put(key, value);
             size++;
+
             return null;
         }
 
