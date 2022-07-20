@@ -101,7 +101,8 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     public V remove(Object key) {
 
         V temp = get(key);
-        if(temp != null){
+        if (temp != null)
+        {
             entries[index] = entries[size - 1];
             size--;
             entries[size] = null;
