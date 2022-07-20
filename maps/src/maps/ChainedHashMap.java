@@ -1,6 +1,7 @@
 package maps;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -13,12 +14,10 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     public static void main(String[] args){
         ChainedHashMap<String, String> map = new ChainedHashMap<>();
-        map.put("KEY", "OLD_VAL");
         map.put("KEY", "VAL");
         map.put("one", "c");
         map.clear();
-        map.clear();
-        System.out.println(map.toString());
+        System.out.println(map.get("one"));
     }
 
     private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.75;
@@ -155,14 +154,11 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         //     chains[i].clear();
         // }
 
-        // ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
-        // while(idk.hasNext()){
-        //     Entry<K,V> hi = idk.next();
-        //     remove(hi);
-        // }
-        size = 0;
-        chains = createArrayOfChains(chains
-            .length);
+        ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
+        while(idk.hasNext()){
+            remove(idk.next().getKey());
+        }
+        //chains = createArrayOfChains(0);
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
@@ -230,7 +226,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         @Override
         public boolean hasNext() {
             // TODO: replace this with your code
-            try{
                 for(int i = index; i < chains.length; i++){
                     if(mapIteratorArray[i] == null){
                         mapIteratorArray[i] = chains[i].iterator();
@@ -239,9 +234,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
                         return true;
                     }
                 }
-            } catch (Exception NullPointerException){
-                return false;
-            }
+
             return false;
             //return false;
             //throw new UnsupportedOperationException("Not implemented yet.");
