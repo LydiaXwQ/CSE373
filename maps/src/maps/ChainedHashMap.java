@@ -154,10 +154,13 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     public void clear() {
         // TODO: replace this with your code
 
-        ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
-        while(size > 0){
-            remove(idk.next().getKey());
-        }
+        chains = createArrayOfChains(chainCount);
+
+
+        // ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
+        // while(size > 0){
+        //     remove(idk.next().getKey());
+        // }
     }
 
     @Override
