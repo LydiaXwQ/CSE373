@@ -19,8 +19,8 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
         map.clear();
         Iterator<Map.Entry<Integer,Integer>> itr = map.iterator();
-        System.out.println(itr.next());
-
+        System.out.println(map.remove(1));
+        System.out.println(itr.hasNext());
 
     }
 
@@ -154,7 +154,11 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     public void clear() {
         // TODO: replace this with your code
 
-        chains = createArrayOfChains(chainCount);
+        for (AbstractIterableMap<K, V> chain : chains) {
+            chain.clear();
+        }
+        //chains = createArrayOfChains(chainCount);
+        size = 0;
 
 
         // ChainedHashMapIterator<K,V> idk = new ChainedHashMapIterator<>(chains);
