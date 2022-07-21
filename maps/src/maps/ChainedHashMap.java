@@ -28,9 +28,9 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     }
 
-    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.75;
-    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 2;
-    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 10;
+    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 3;
+    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
+    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 30;
     private static double threshold = DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
     private static int chainCount = DEFAULT_INITIAL_CHAIN_COUNT;
     private static int chainCapacity = DEFAULT_INITIAL_CHAIN_CAPACITY;
@@ -111,17 +111,24 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     private void resize()
     {
         ChainedHashMap<K, V> temp = new ChainedHashMap<>(DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD,
-             DEFAULT_INITIAL_CHAIN_COUNT*2, DEFAULT_INITIAL_CHAIN_CAPACITY);
+            DEFAULT_INITIAL_CHAIN_COUNT*2, DEFAULT_INITIAL_CHAIN_CAPACITY);
         ChainedHashMapIterator<K, V> idk = new ChainedHashMapIterator<>(chains);
-        int loopSize = size;
-        while (loopSize > 0)
+        int size2 = size;
+        while (size2>0)
         {
             Entry<K, V> hi = idk.next();
             temp.put(hi.getKey(), hi.getValue());
-            loopSize--;
+            size2--;
         }
+
+        // while (idk.hasNext())
+        // {
+        //     Entry<K, V> hi = idk.next();
+        //     temp.put(hi.getKey(), hi.getValue());
+        // }
         chains = temp.chains;
         threshold *= 2;
+
     }
 
     @Override
@@ -132,14 +139,14 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         // if (containsKey(key))
         // {
         //     return chains[getHasCode(key)].get(key);
-        //
+        // }
         // return null;
     }
 
     @Override
     public V put(K key, V value) {
 
-        if (size >= threshold * chainCount)
+        if (size >= threshold*chainCount)
         {
             resize();
         }
@@ -226,11 +233,11 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         public ChainedHashMapIterator(AbstractIterableMap<K, V>[] chains) {
 
             this.chains = chains;
+
         }
 
         @Override
         public boolean hasNext() {
-
             try
             {
                 for (int i = index; i <= chains.length; i++)
