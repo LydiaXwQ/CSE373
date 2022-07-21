@@ -137,10 +137,12 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public void clear() {
-        for (int i = size - 1; i >= 0; i--) {
-            entries[i] = null;
-            size--;
-        }
+        // for (int i = size - 1; i >= 0; i--) {
+        //     entries[i] = null;
+        //     size--;
+        // }
+        entries = createArrayOfEntries(DEFAULT_INITIAL_CAPACITY);
+        size = 0;
     }
 
     @Override

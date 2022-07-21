@@ -29,11 +29,10 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 3;
-    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
-    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 30;
+    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 2;
+    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 3;
     private static double threshold = DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
     private static int chainCount = DEFAULT_INITIAL_CHAIN_COUNT;
-    private static int chainCapacity = DEFAULT_INITIAL_CHAIN_CAPACITY;
     private int size = 0;
     /*
     Warning:
@@ -69,7 +68,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
         threshold = resizingLoadFactorThreshold;
         chainCount = initialChainCount;
-        chainCapacity = chainInitialCapacity;
     }
 
     /**
@@ -114,7 +112,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             DEFAULT_INITIAL_CHAIN_COUNT*2, DEFAULT_INITIAL_CHAIN_CAPACITY);
         ChainedHashMapIterator<K, V> idk = new ChainedHashMapIterator<>(chains);
         int size2 = size;
-        while (size2>0)
+        while (size2 > 0)
         {
             Entry<K, V> hi = idk.next();
             temp.put(hi.getKey(), hi.getValue());
@@ -188,11 +186,12 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     @Override
     public void clear() {
-
-        for (AbstractIterableMap<K, V> chain : chains) {
-            chain.clear();
-        }
+        chains = createArrayOfChains(DEFAULT_INITIAL_CHAIN_COUNT);
         size = 0;
+        // for (AbstractIterableMap<K, V> chain : chains) {
+        //     chain.clear();
+        // }
+        // size = 0;
 
     }
 
@@ -224,22 +223,22 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         private AbstractIterableMap<K, V>[] chains;
         private int index = 0;
         //private Iterator<Map.Entry<K, V>> itr = null;
-        private Iterator<Map.Entry<K, V>> iter;
+        private Iterator<Map.Entry<K, V>> itr;
         public ChainedHashMapIterator(AbstractIterableMap<K, V>[] chains) {
             this.chains = chains;
-            iter = chains[index].entrySet().iterator();
+            itr = chains[index].entrySet().iterator();
         }
 
         @Override
         public boolean hasNext() {
-            if (iter.hasNext()) {
+            if (itr.hasNext()) {
                 return true;
             } else {
                 index++;
                 if (index >= chains.length) {
                     return false;
                 }
-                iter = chains[index].entrySet().iterator();
+                itr = chains[index].entrySet().iterator();
                 return hasNext();
             }
             // try
@@ -273,7 +272,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             if (!hasNext()) {
                 throw new NoSuchElementException("No more elements");
             } else {
-                return iter.next();
+                return itr.next();
             }
 
         }
