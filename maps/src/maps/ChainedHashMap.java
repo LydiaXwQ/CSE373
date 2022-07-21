@@ -1,6 +1,5 @@
 package maps;
 
-import java.util.AbstractMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
@@ -114,13 +113,13 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         ChainedHashMap<K, V> temp = new ChainedHashMap<>(DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD,
              DEFAULT_INITIAL_CHAIN_COUNT*2, DEFAULT_INITIAL_CHAIN_CAPACITY);
         ChainedHashMapIterator<K, V> idk = new ChainedHashMapIterator<>(chains);
-        while (size > 0)
+        int loopSize = size;
+        while (loopSize > 0)
         {
             Entry<K, V> hi = idk.next();
             temp.put(hi.getKey(), hi.getValue());
-            size--;
+            loopSize--;
         }
-        size = temp.size();
         chains = temp.chains;
         threshold *= 2;
     }
