@@ -78,7 +78,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
     public V put(K key, V value) {
         // examine whether our arrayMap contains specified key.
 
-        if(get(key) == null){
+        if (get(key) == null) {
             if (entries.length == size) {
                 SimpleEntry<K, V>[] newEntry = new SimpleEntry[entries.length * 2];
                 System.arraycopy(entries, 0, newEntry, 0, size);

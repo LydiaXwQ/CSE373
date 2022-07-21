@@ -112,21 +112,12 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     {
         ChainedHashMap<K, V> temp = new ChainedHashMap<>(DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD,
             DEFAULT_INITIAL_CHAIN_COUNT*2, DEFAULT_INITIAL_CHAIN_CAPACITY);
-        //ChainedHashMapIterator<K, V> idk = new ChainedHashMapIterator<>(chains);
-        Iterator<Entry<K,V>> hi;
-
-        for (AbstractIterableMap<K, V> chain : chains) {
-            hi = chain.iterator();
-            while (hi.hasNext()) {
-                Entry<K, V> something = hi.next();
-                temp.put(something.getKey(), something.getValue());
-            }
+        ChainedHashMapIterator<K, V> idk = new ChainedHashMapIterator<>(chains);
+        while (idk.hasNext())
+        {
+            Entry<K, V> hi = idk.next();
+            temp.put(hi.getKey(), hi.getValue());
         }
-        // while (idk.hasNext())
-        // {
-        //     Entry<K, V> hi = idk.next();
-        //     temp.put(hi.getKey(), hi.getValue());
-        // }
         chains = temp.chains;
         threshold *= 2;
 
