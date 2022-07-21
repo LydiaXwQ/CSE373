@@ -12,25 +12,24 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
 
     public static void main(String[] args)
     {
-        // ChainedHashMap<Integer, Integer> map = new ChainedHashMap<>();
-        // for (int i = 0; i < 100; i++) {
-        //     map.put(i, i * i);
-        // }
-        //
-        // for(int i = 0; i < 100;i++ )
-        // {
-        //     map.remove(i);
-        // }
-        // map.clear();
-        // Iterator<Map.Entry<Integer, Integer>> itr = map.iterator();
-        // System.out.println(map.remove(1));
-        // System.out.println(itr.hasNext());
+        ChainedHashMap<Integer, Integer> map = new ChainedHashMap<>();
+        for (int i = 0; i < 100000; i++) {
+            map.put(i, i * i);
+        }
+        System.out.println("Put done");
+
+        for (int i = 0; i < 100000; i++)
+        {
+            map.remove(i);
+        }
+
+        System.out.println("remove all done");
 
     }
 
-    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 3;
-    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 10;
-    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 30;
+    private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.75;
+    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 200;
+    private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 100;
     private static double threshold = DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
     private static int chainCount = DEFAULT_INITIAL_CHAIN_COUNT;
     private static int chainCapacity = DEFAULT_INITIAL_CHAIN_CAPACITY;
