@@ -84,6 +84,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
                 System.arraycopy(entries, 0, newEntry, 0, size);
                 entries = newEntry;
             }
+
             entries[size] = new SimpleEntry<>(key, value);
             size++;
             return null;
