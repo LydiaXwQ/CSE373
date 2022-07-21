@@ -28,7 +28,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     }
 
     private static final double DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD = 0.75;
-    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 200;
+    private static final int DEFAULT_INITIAL_CHAIN_COUNT = 2000;
     private static final int DEFAULT_INITIAL_CHAIN_CAPACITY = 100;
     private static double threshold = DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD;
     private static int chainCount = DEFAULT_INITIAL_CHAIN_COUNT;
