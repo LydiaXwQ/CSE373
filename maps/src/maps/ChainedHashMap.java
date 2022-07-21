@@ -146,7 +146,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         // if (containsKey(key))
         // {
         //     return chains[getHasCode(key)].get(key);
-        // }
+        //
         // return null;
     }
 
