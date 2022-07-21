@@ -122,7 +122,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
                 temp.put(something.getKey(), something.getValue());
             }
         }
-
         // while (idk.hasNext())
         // {
         //     Entry<K, V> hi = idk.next();
