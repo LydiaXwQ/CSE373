@@ -10,8 +10,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     // IMPORTANT: Do not rename these fields or change their visibility.
     // We access these during grading to test your code.
     static final int START_INDEX = 1;
+    private int size = 0;
     List<PriorityNode<T>> items;
-    // TODO: add fields as necessary
+
 
     public ArrayHeapMinPQ() {
         items = new ArrayList<>();
@@ -24,14 +25,22 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
      * A helper method for swapping the items at two indices of the array heap.
      */
     private void swap(int a, int b) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        PriorityNode<T> temp = items.get(a);
+        items.set(a, items.get(b));
+        items.set(b, temp);
     }
 
     @Override
     public void add(T item, double priority) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        items.add(new PriorityNode<>(item, priority));
+        int parentIndex = size / 2;
+        int index = size;
+        while (parentIndex != 0 && items.get(parentIndex).getPriority() > priority) {
+            swap(parentIndex, size);
+            index = parentIndex;
+            parentIndex = parentIndex / 2;
+        }
+
     }
 
     @Override
@@ -60,7 +69,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     @Override
     public int size() {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return size;
     }
 }
