@@ -1,5 +1,7 @@
 package priorityqueues;
 
+import edu.princeton.cs.algs4.StdOut;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,16 +13,26 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     // We access these during grading to test your code.
     static final int START_INDEX = 1;
     private int size = 0;
+    private int addIndex = START_INDEX;
     List<PriorityNode<T>> items;
 
 
+    public static void main(String[] args) {
+        ArrayHeapMinPQ<String> test = new ArrayHeapMinPQ<>();
+        test.add("I", 1.0);
+        System.out.println();
+
+    }
+
     public ArrayHeapMinPQ() {
         items = new ArrayList<>();
-        // TODO: add code as necessary
+        items.add(0, null);
+
     }
 
     // Here's a method stub that may be useful. Feel free to change or remove it, if you wish.
     // You'll probably want to add more helper methods like this one to make your code easier to read.
+
     /**
      * A helper method for swapping the items at two indices of the array heap.
      */
@@ -32,14 +44,21 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     @Override
     public void add(T item, double priority) {
-        items.add(new PriorityNode<>(item, priority));
+        items.add(addIndex, new PriorityNode<>(item, priority));
+        size++;
         int parentIndex = size / 2;
         int index = size;
-        while (parentIndex != 0 && items.get(parentIndex).getPriority() > priority) {
+        while (parentIndex != 0 && items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
             swap(parentIndex, size);
             index = parentIndex;
             parentIndex = parentIndex / 2;
         }
+
+        addIndex++;
+
+        // if (items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
+        //     swap(parentIndex, index);
+        // }
 
     }
 
