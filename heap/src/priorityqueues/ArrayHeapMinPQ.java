@@ -4,7 +4,9 @@ import edu.princeton.cs.algs4.StdOut;
 import maps.ChainedHashMap;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -18,7 +20,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     private int addIndex = START_INDEX;
     List<PriorityNode<T>> items;
 
-    private ChainedHashMap<T, Integer> map;
+    private Map<T, Integer> map;
 
     public static void main(String[] args) {
         ExtrinsicMinPQ<String> test = new ArrayHeapMinPQ<>();
@@ -35,7 +37,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     public ArrayHeapMinPQ() {
         items = new ArrayList<>();
         items.add(0, new PriorityNode<>(null, -99999999));
-        map = new ChainedHashMap<>();
+        map = new HashMap<>();
     }
 
     // Here's a method stub that may be useful. Feel free to change or remove it, if you wish.
@@ -79,7 +81,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
             swap(parentIndex, index, items.get(parentIndex).getItem());
             index = parentIndex;
-            parentIndex = parentIndex / 2;
             percolateUp(index);
         }
         return index;
@@ -154,13 +155,13 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (!map.containsKey(item)) {
             throw new NoSuchElementException();
         }
-        int index = items.indexOf(item);
+        int index = map.get(item);
         double oldPriority = items.get(index).getPriority();
         items.get(index).setPriority(priority);
-        if (priority > oldPriority) {
-            percolateDown(index);
-        } else {
+        if (priority < oldPriority) {
             percolateUp(index);
+        } else {
+            percolateDown(index);
         }
 
         //throw new UnsupportedOperationException("Not implemented yet.");
