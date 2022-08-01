@@ -78,7 +78,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     //return the final index of the new item
     private int percolateUp(int index) {
         int parentIndex = index / 2;
-        if (items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
+        if (items.get(parentIndex).getPriority() > items.get(index).getPriority() && parentIndex != 0) {
             swap(parentIndex, index, items.get(parentIndex).getItem());
             index = parentIndex;
             percolateUp(index);
