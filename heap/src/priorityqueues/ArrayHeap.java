@@ -3,7 +3,7 @@ package priorityqueues;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
-import java.lang.Math;
+import java.util.NoSuchElementException;
 
 /**
  * @see ExtrinsicMinPQ
@@ -13,7 +13,7 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
     // We access these during grading to test your code.
     static final int START_INDEX = 1;
     List<PriorityNode<T>> items;
-    HashMap<T, Integer>> hashMap;
+    HashMap<T, Integer> hashMap;
     // TODO: add fields as necessary
 
     public ArrayHeap() {
@@ -33,7 +33,7 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
         PriorityNode<T> temp = items.get(a);
         hashMap.put(items.get(a).getItem(), b);
         items.set(a,items.get(b));
-        hashMap.put(items.get(b).getItem, a);
+        hashMap.put(items.get(b).getItem(), a);
         items.set(b, temp);
 
     }
@@ -51,14 +51,14 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
     }
 
     private int rightChildIndex(int i){
-        return leftChild(i) + 1; 
+        return leftChildIndex(i) + 1;
     }
 
     private void percolateUp(int i){
         int index = i; 
         double priority = items.get(index).getPriority(); 
-        while(priority < parentNode(index).getPriority && parentIndex(index) != 0){
-            swap(parentIndex(index), index)
+        while(priority < parentNode(index).getPriority() && parentIndex(index) != 0){
+            swap(parentIndex(index), index);
             index = parentIndex(index);
         }
     }
@@ -68,7 +68,7 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
         double priority = items.get(curIndex).getPriority(); 
         int possibleSwapIndex;
         if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()){
-                possibleSwapIndex = leftChildIndex(curIndex)
+                possibleSwapIndex = leftChildIndex(curIndex);
             } else {
                 possibleSwapIndex = rightChildIndex(curIndex);
             }
@@ -76,7 +76,7 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
                 swap(possibleSwapIndex, curIndex);
                 curIndex = possibleSwapIndex; 
                 if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()) {
-                possibleSwapIndex = leftChildIndex(curIndex)
+                possibleSwapIndex = leftChildIndex(curIndex);
                 } else {
                 possibleSwapIndex = rightChildIndex(curIndex);
                 }
@@ -87,7 +87,7 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
     public void add(T item, double priority) {
         // TODO: replace this with your code
 
-        if(containsKey(item)){
+        if(contains(item)){
             throw new IllegalArgumentException();
         }
 
@@ -115,9 +115,9 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
     public T peekMin() {
         // TODO: replace this with your code
         if(size() == 0){
-            throw new NoSuchElementException("PQ is empty");; 
+            throw new NoSuchElementException("PQ is empty");
         } else {
-            return items.get(START_INDEX);
+            return items.get(START_INDEX).getItem();
         }
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
@@ -126,12 +126,12 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
     public T removeMin() {
         // TODO: replace this with your code
         if(size() == 0){
-            throw new NoSuchElementException("PQ is empty");; 
+            throw new NoSuchElementException("PQ is empty");
         }
-        T temp = items.get(START_INDEX);
+        T temp = items.get(START_INDEX).getItem();
         hashMap.remove(temp);
         items.set(START_INDEX, items.get(size()));
-        hashMap.put(items.get(START_INDEX), START_INDEX);
+        hashMap.put(items.get(START_INDEX).getItem(), START_INDEX);
         items.remove(size());
         if(size() > START_INDEX){
             percolateDown(START_INDEX);
@@ -146,7 +146,7 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
     public void changePriority(T item, double priority) {
         // TODO: replace this with your code
 
-        if(!containsKey(item)){
+        if(!contains(item)){
             throw new NoSuchElementException();
         }
         int indexOfItem = hashMap.get(item);
