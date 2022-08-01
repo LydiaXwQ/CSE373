@@ -3,6 +3,7 @@ package priorityqueues;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
+import java.lang.Math;
 
 /**
  * @see ExtrinsicMinPQ
@@ -98,7 +99,29 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
             throw new NoSuchElementException("PQ is empty");; 
         }
         T temp = items.get(START_INDEX);
-        while(size() > START_INDEX)
+        hashMap.remove(temp);
+        items.set(START_INDEX, items.get(size()));
+        hashMap.put(items.get(START_INDEX), START_INDEX);
+        items.remove(size());
+        int curIndex = START_INDEX;
+        if(size() > START_INDEX){
+            int possibleSwapIndex; 
+            if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()){
+                possibleSwapIndex = leftChildIndex(curIndex)
+            } else {
+                possibleSwapIndex = rightChildIndex(curIndex);
+            }
+            while(items.get(curIndex).getPriority() > items.get(possibleSwapIndex).getPriority()){
+                swap(possibleSwapIndex, curIndex);
+                curIndex = possibleSwapIndex; 
+                if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()) {
+                possibleSwapIndex = leftChildIndex(curIndex)
+                } else {
+                possibleSwapIndex = rightChildIndex(curIndex);
+                }
+            }
+        }
+        return temp; 
         
 
         //throw new UnsupportedOperationException("Not implemented yet.");
