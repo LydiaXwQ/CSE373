@@ -25,11 +25,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     public static void main(String[] args) {
         ExtrinsicMinPQ<String> test = new ArrayHeapMinPQ<>();
         test.add("a", 1.0);
-        test.add("b", 2.0);
         // test.add("c", 3.0);
         // test.add("d", 4.0);
-        test.removeMin();
-        System.out.println(test.peekMin().toString());
+        System.out.println(test.removeMin().toString());
 
 
     }
@@ -76,6 +74,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
     //return the final index of the new item
+    // second condition for adding new item with negative infinity priority
     private int percolateUp(int index) {
         int parentIndex = index / 2;
         if (items.get(parentIndex).getPriority() > items.get(index).getPriority() && parentIndex != 0) {
@@ -103,12 +102,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     @Override
     public T removeMin() {
         T minItem = peekMin();
-        if (size == 1) {
-            size--;
-            return minItem;
-        }
-        swap(size, 1, items.get(size).getItem());
         map.remove(minItem);
+        swap(size, 1, items.get(size).getItem());
         items.remove(size);
         size--;
 
@@ -144,8 +139,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             } else {
                 map.put(items.get(index).getItem(), index);
             }
-        } else {
-            map.put(items.get(index).getItem(), index);
         }
 
     }
