@@ -21,6 +21,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     List<PriorityNode<T>> items;
 
     private Map<T, Integer> map;
+    private HashMap<T, PriorityNode<T>> enhancedHashMap;
 
     public static void main(String[] args) {
         ExtrinsicMinPQ<String> test = new ArrayHeapMinPQ<>();
@@ -36,6 +37,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         items = new ArrayList<>();
         items.add(0, new PriorityNode<>(null, -99999999));
         map = new HashMap<>();
+        enhancedHashMap = new HashMap<>();
     }
 
     // Here's a method stub that may be useful. Feel free to change or remove it, if you wish.
