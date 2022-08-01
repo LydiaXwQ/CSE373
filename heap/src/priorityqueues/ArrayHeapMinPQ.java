@@ -1,9 +1,11 @@
 package priorityqueues;
 
 import edu.princeton.cs.algs4.StdOut;
+import maps.ChainedHashMap;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 /**
  * @see ExtrinsicMinPQ
@@ -16,18 +18,24 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     private int addIndex = START_INDEX;
     List<PriorityNode<T>> items;
 
+    private ChainedHashMap<T, Integer> map;
 
     public static void main(String[] args) {
-        ArrayHeapMinPQ<String> test = new ArrayHeapMinPQ<>();
-        test.add("I", 1.0);
-        System.out.println();
+        ExtrinsicMinPQ<String> test = new ArrayHeapMinPQ<>();
+        test.add("a", 1.0);
+        test.add("b", 2.0);
+        // test.add("c", 3.0);
+        // test.add("d", 4.0);
+        test.removeMin();
+        System.out.println(test.peekMin().toString());
+
 
     }
 
     public ArrayHeapMinPQ() {
         items = new ArrayList<>();
-        items.add(0, null);
-
+        items.add(0, new PriorityNode<>(null, -99999999));
+        map = new ChainedHashMap<>();
     }
 
     // Here's a method stub that may be useful. Feel free to change or remove it, if you wish.
@@ -36,54 +44,126 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     /**
      * A helper method for swapping the items at two indices of the array heap.
      */
-    private void swap(int a, int b) {
-        PriorityNode<T> temp = items.get(a);
-        items.set(a, items.get(b));
-        items.set(b, temp);
+    private void swap(int parentIndex, int idk, T parentItem) {
+        // only change parent's index
+        PriorityNode<T> temp = items.get(parentIndex);
+        items.set(parentIndex, items.get(idk));
+        items.set(idk, temp);
+        map.put(parentItem, idk);
     }
 
     @Override
     public void add(T item, double priority) {
-        items.add(addIndex, new PriorityNode<>(item, priority));
-        size++;
-        int parentIndex = size / 2;
-        int index = size;
-        while (parentIndex != 0 && items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
-            swap(parentIndex, size);
-            index = parentIndex;
-            parentIndex = parentIndex / 2;
+        if (map.containsKey(item)) {
+            throw new IllegalArgumentException();
         }
 
-        addIndex++;
-
-        // if (items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
-        //     swap(parentIndex, index);
+        //increase the size
+        size++;
+        //add new item at the end of the ArrayList
+        items.add(size, new PriorityNode<>(item, priority));
+        // while (items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
+        //     swap(parentIndex, index, items.get(parentIndex).getItem());
+        //     index = parentIndex;
+        //     parentIndex = parentIndex / 2;
         // }
-
+        int index = size;
+        index = percolateUp(index);
+        //add the new item to the map
+        map.put(item, index);
     }
 
+    //return the final index of the new item
+    private int percolateUp(int index) {
+        int parentIndex = index / 2;
+        if (items.get(parentIndex).getPriority() > items.get(index).getPriority()) {
+            swap(parentIndex, index, items.get(parentIndex).getItem());
+            index = parentIndex;
+            parentIndex = parentIndex / 2;
+            percolateUp(index);
+        }
+        return index;
+    }
     @Override
     public boolean contains(T item) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        return map.containsKey(item);
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public T peekMin() {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if (size == 0) {
+            throw new NoSuchElementException();
+        }
+        return items.get(1).getItem();
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public T removeMin() {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        T minItem = peekMin();
+        if (size == 1) {
+            size--;
+            return minItem;
+        }
+        swap(size, 1, items.get(size).getItem());
+        map.remove(minItem);
+        items.remove(size);
+        size--;
+
+        //percolate down
+        percolateDown(START_INDEX);
+        return minItem;
+        //throw new UnsupportedOperationException("Not implemented yet.");
+    }
+
+    private void percolateDown(int index) {
+        int leftChild = 2 * index;
+        // initial index of right child
+        int rightChild = 2 * index + 1;
+
+        if (rightChild <= size) {
+            double priority = items.get(index).getPriority();
+            double leftPriority = items.get(leftChild).getPriority();
+            double rightPriority = items.get(rightChild).getPriority();
+            if (priority > leftPriority && leftPriority < rightPriority) {
+                swap(leftChild, index, items.get(leftChild).getItem());
+                percolateDown(leftChild);
+            } else if(priority > rightPriority) {
+                swap(rightChild, index, items.get(rightChild).getItem());
+                percolateDown(rightChild);
+            } else {
+                map.put(items.get(index).getItem(), index);
+            }
+        } else if(leftChild <= size) {
+            double priority = items.get(index).getPriority();
+            double leftPriority = items.get(leftChild).getPriority();
+            if (priority > leftPriority) {
+                swap(leftChild, index, items.get(leftChild).getItem());
+            } else {
+                map.put(items.get(index).getItem(), index);
+            }
+        } else {
+            map.put(items.get(index).getItem(), index);
+        }
+
     }
 
     @Override
     public void changePriority(T item, double priority) {
-        // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+        if (!map.containsKey(item)) {
+            throw new NoSuchElementException();
+        }
+        int index = items.indexOf(item);
+        double oldPriority = items.get(index).getPriority();
+        items.get(index).setPriority(priority);
+        if (priority > oldPriority) {
+            percolateDown(index);
+        } else {
+            percolateUp(index);
+        }
+
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override

@@ -76,3 +76,4 @@ public class NaiveMinPQ<T> implements ExtrinsicMinPQ<T> {
     }
 
 }
+
