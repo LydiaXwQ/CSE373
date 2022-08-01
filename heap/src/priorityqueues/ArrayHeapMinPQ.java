@@ -67,8 +67,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         //     index = parentIndex;
         //     parentIndex = parentIndex / 2;
         // }
-        int index = size;
-        index = percolateUp(index);
+        int index = percolateUp(size);
         //add the new item to the map
         map.put(item, index);
     }
@@ -108,7 +107,9 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         size--;
 
         //percolate down
-        percolateDown(START_INDEX);
+        if (size != 0) {
+            percolateDown(START_INDEX);
+        }
         return minItem;
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
@@ -139,6 +140,8 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             } else {
                 map.put(items.get(index).getItem(), index);
             }
+        }else {
+            map.put(items.get(index).getItem(), index);
         }
 
     }
