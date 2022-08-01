@@ -107,8 +107,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
     }
 
-    private void resize()
-    {
+    private void resize() {
         ChainedHashMap<K, V> temp = new ChainedHashMap<>(DEFAULT_RESIZING_LOAD_FACTOR_THRESHOLD,
             DEFAULT_INITIAL_CHAIN_COUNT*2, DEFAULT_INITIAL_CHAIN_CAPACITY);
         ChainedHashMapIterator<K, V> idk = new ChainedHashMapIterator<>(chains);
@@ -145,7 +144,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     @Override
     public V put(K key, V value) {
 
-        if (size >= threshold*chainCount)
+        if (size >= threshold * chainCount)
         {
             resize();
         }
@@ -174,8 +173,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
     public V remove(Object key) {
 
         V temp = chains[getHasCode(key)].remove(key);
-        if (temp != null)
-        {
+        if (temp != null) {
             size--;
             return temp;
         }
@@ -241,7 +239,6 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
             {
                 for (int i = index; i <= chains.length; i++)
                 {
-
                     if (itr == null)
                     {
                         index = i;
@@ -263,8 +260,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
         }
 
         @Override
-        public Map.Entry<K, V> next()
-        {
+        public Map.Entry<K, V> next() {
 
             if (!hasNext()) {
                 throw new NoSuchElementException("No more elements");
