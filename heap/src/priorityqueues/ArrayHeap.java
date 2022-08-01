@@ -54,6 +54,35 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
         return leftChild(i) + 1; 
     }
 
+    private void percolateUp(int i){
+        int index = i; 
+        double priority = items.get(index).getPriority(); 
+        while(priority < parentNode(index).getPriority && parentIndex(index) != 0){
+            swap(parentIndex(index), index)
+            index = parentIndex(index);
+        }
+    }
+
+    private void percolateDown(int i){
+        int curIndex = i;
+        double priority = items.get(curIndex).getPriority(); 
+        int possibleSwapIndex;
+        if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()){
+                possibleSwapIndex = leftChildIndex(curIndex)
+            } else {
+                possibleSwapIndex = rightChildIndex(curIndex);
+            }
+            while(priority > items.get(possibleSwapIndex).getPriority()){
+                swap(possibleSwapIndex, curIndex);
+                curIndex = possibleSwapIndex; 
+                if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()) {
+                possibleSwapIndex = leftChildIndex(curIndex)
+                } else {
+                possibleSwapIndex = rightChildIndex(curIndex);
+                }
+            }
+    }
+
     @Override
     public void add(T item, double priority) {
         // TODO: replace this with your code
@@ -62,14 +91,15 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
             throw new IllegalArgumentException();
         }
 
-        PriorityNode<T> temp = new PriorityNode<>(item,priority);
+        PriorityNode<T> temp = new PriorityNode<>(item, priority);
         items.set(size()+1, temp);
-        int index = size();
-        hashMap.put(item,index);
-        while(priority < parentNode(index).getPriority && parentIndex(index) != 0){
-            swap(parentIndex(index), index)
-            index = parentIndex(index);
-        }
+        hashMap.put(item,size());
+        percolateUp(size());
+        // int index = size();
+        // while(priority < parentNode(index).getPriority && parentIndex(index) != 0){
+        //     swap(parentIndex(index), index)
+        //     index = parentIndex(index);
+        // }
 
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
@@ -103,23 +133,8 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
         items.set(START_INDEX, items.get(size()));
         hashMap.put(items.get(START_INDEX), START_INDEX);
         items.remove(size());
-        int curIndex = START_INDEX;
         if(size() > START_INDEX){
-            int possibleSwapIndex; 
-            if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()){
-                possibleSwapIndex = leftChildIndex(curIndex)
-            } else {
-                possibleSwapIndex = rightChildIndex(curIndex);
-            }
-            while(items.get(curIndex).getPriority() > items.get(possibleSwapIndex).getPriority()){
-                swap(possibleSwapIndex, curIndex);
-                curIndex = possibleSwapIndex; 
-                if(items.get(leftChildIndex(curIndex)).getPriority() < items.get(rightChildIndex(curIndex)).getPriority()) {
-                possibleSwapIndex = leftChildIndex(curIndex)
-                } else {
-                possibleSwapIndex = rightChildIndex(curIndex);
-                }
-            }
+            percolateDown(START_INDEX);
         }
         return temp; 
         
@@ -130,7 +145,19 @@ public class ArrayHeap<T> implements ExtrinsicMinPQ<T> {
     @Override
     public void changePriority(T item, double priority) {
         // TODO: replace this with your code
-        throw new UnsupportedOperationException("Not implemented yet.");
+
+        if(!containsKey(item)){
+            throw new NoSuchElementException();
+        }
+        int indexOfItem = hashMap.get(item);
+        double oldPriority = items.get(indexOfItem).getPriority();
+        items.get(indexOfItem).setPriority(priority);
+        if (priority < oldPriority) {
+            percolateUp(indexOfItem);
+        } else {
+            percolateDown(indexOfItem);
+        }
+        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
