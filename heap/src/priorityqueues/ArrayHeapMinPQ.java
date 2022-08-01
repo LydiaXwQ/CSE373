@@ -54,7 +54,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     @Override
     public void add(T item, double priority) {
-        if (map.containsKey(item)) {
+        if (map.containsKey(item) || item == null) {
             throw new IllegalArgumentException();
         }
 
