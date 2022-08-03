@@ -23,11 +23,30 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
     private Map<T, Integer> map;
 
     public static void main(String[] args) {
-        ExtrinsicMinPQ<String> test = new ArrayHeapMinPQ<>();
-        test.add("a", 1.0);
-        // test.add("c", 3.0);
-        // test.add("d", 4.0);
-        System.out.println(test.removeMin().toString());
+        ExtrinsicMinPQ<Integer> test = new ArrayHeapMinPQ<>();
+        test.add(1, 1);
+        test.add(2, 2);
+        test.add(3, 3);
+        test.add(4, 4);
+        test.add(5, 5);
+        // test.add("Gavroche", 6);
+        // test.add("Fantine", 7);
+        // test.add("Thenardier", 8);
+        // test.add("Enjolras", 9);
+        // test.add("Grantaire", 10);
+        System.out.println(test.removeMin());
+        System.out.println(test.removeMin());
+        System.out.println(test.removeMin());
+        System.out.println(test.removeMin());
+        System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
+        // test.removeMin();
+        // test.removeMin();
+        // test.removeMin();
 
 
     }
@@ -107,42 +126,74 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         size--;
 
         //percolate down
-        if (size != 0) {
-            percolateDown(START_INDEX);
+        if (size > 0) {
+            percolateDown(START_INDEX, 2, 3, items.get(START_INDEX).getPriority());
         }
         return minItem;
         //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
-    private void percolateDown(int index) {
-        int leftChild = 2 * index;
+    private void percolateDown(int index, double leftPriority, double rightPriority, double priority) {
+        int leftIndex = 2 * index;
         // initial index of right child
-        int rightChild = 2 * index + 1;
+        int rightIndex = 2 * index + 1;
 
-        if (rightChild <= size) {
-            double priority = items.get(index).getPriority();
-            double leftPriority = items.get(leftChild).getPriority();
-            double rightPriority = items.get(rightChild).getPriority();
-            if (priority > leftPriority && leftPriority < rightPriority) {
-                swap(leftChild, index, items.get(leftChild).getItem());
-                percolateDown(leftChild);
-            } else if(priority > rightPriority) {
-                swap(rightChild, index, items.get(rightChild).getItem());
-                percolateDown(rightChild);
+        //System.out.println("leftIndex " + leftIndex);
+
+
+        if (leftIndex <= size) {
+            if (rightIndex > size) {
+                leftPriority = items.get(leftIndex).getPriority();
+                rightPriority = 999999;
             } else {
-                map.put(items.get(index).getItem(), index);
+                leftPriority = items.get(leftIndex).getPriority();
+                rightPriority = items.get(rightIndex).getPriority();
             }
-        } else if(leftChild <= size) {
-            double priority = items.get(index).getPriority();
-            double leftPriority = items.get(leftChild).getPriority();
-            if (priority > leftPriority) {
-                swap(leftChild, index, items.get(leftChild).getItem());
-            } else {
-                map.put(items.get(index).getItem(), index);
-            }
-        }else {
-            map.put(items.get(index).getItem(), index);
         }
+
+
+        if (leftIndex <= size || rightIndex <= size) {
+
+            if (priority > leftPriority && leftPriority < rightPriority) {
+                swap(leftIndex, index, items.get(leftIndex).getItem());
+                // System.out.println("leftIndex " + leftIndex);
+                // System.out.println("leftPriority " + leftPriority);
+                percolateDown(leftIndex, leftPriority, rightPriority, priority);
+            } else {
+                if (priority > rightPriority) {
+                    swap(rightIndex, index, items.get(rightIndex).getItem());
+                    percolateDown(rightIndex, leftPriority, rightPriority, priority);
+                }
+            }
+        }
+
+        map.put(items.get(index).getItem(), index);
+
+        //
+        // if (rightChild <= size) {
+        //     double priority = items.get(index).getPriority();
+        //     double leftPriority = items.get(leftChild).getPriority();
+        //     double rightPriority = items.get(rightChild).getPriority();
+        //     if (priority > leftPriority && leftPriority < rightPriority) {
+        //         swap(leftChild, index, items.get(leftChild).getItem());
+        //         percolateDown(leftChild);
+        //     } else if(priority > rightPriority) {
+        //         swap(rightChild, index, items.get(rightChild).getItem());
+        //         percolateDown(rightChild);
+        //     } else {
+        //         map.put(items.get(index).getItem(), index);
+        //     }
+        // } else if(leftChild <= size) {
+        //     double priority = items.get(index).getPriority();
+        //     double leftPriority = items.get(leftChild).getPriority();
+        //     if (priority > leftPriority) {
+        //         swap(leftChild, index, items.get(leftChild).getItem());
+        //     } else {
+        //         map.put(items.get(index).getItem(), index);
+        //     }
+        // } else {
+        //     map.put(items.get(index).getItem(), index);
+        // }
 
     }
 
@@ -157,7 +208,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (priority < oldPriority) {
             percolateUp(index);
         } else {
-            percolateDown(index);
+            percolateDown(index, index * 2, index * 2 + 1, items.get(index).getPriority());
         }
 
         //throw new UnsupportedOperationException("Not implemented yet.");
