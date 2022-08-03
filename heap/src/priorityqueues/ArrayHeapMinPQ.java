@@ -25,22 +25,24 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
 
     public static void main(String[] args) {
         ExtrinsicMinPQ<Integer> test = new ArrayHeapMinPQ<>();
-        test.add(1, 1);
-        test.add(2, 2);
-        test.add(3, 3);
-        test.add(4, 4);
-        test.add(5, 5);
-        test.add(6, 6);
-        test.add(7, 7);
+        //159877, 60674, 48726, 24866, 113136, 108414, 18
+        test.add(159877, 159877);
+        test.add(60674, 60674);
+        test.add(48726, 48726);
+        test.add(24866, 24866);
+        // test.add(4, 4);
+        // test.add(5, 5);
+        // test.add(6, 6);
+        // test.add(7, 7);
         // test.add("Fantine", 7);
         // test.add("Thenardier", 8);
         // test.add("Enjolras", 9);
         // test.add("Grantaire", 10);
         System.out.println(test.removeMin());
         System.out.println(test.removeMin());
-        System.out.println(test.removeMin());
-        System.out.println(test.removeMin());
-        System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
+        // System.out.println(test.removeMin());
         // System.out.println(test.removeMin());
         // System.out.println(test.removeMin());
         // System.out.println(test.removeMin());
@@ -147,7 +149,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         if (leftIndex <= size) {
             if (rightIndex > size) {
                 leftPriority = items.get(leftIndex).getPriority();
-                rightPriority = 999999;
+                rightPriority = 999999999;
             } else {
                 leftPriority = items.get(leftIndex).getPriority();
                 rightPriority = items.get(rightIndex).getPriority();
