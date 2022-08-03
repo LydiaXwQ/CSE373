@@ -29,7 +29,7 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         test.add(3, 3);
         test.add(4, 4);
         test.add(5, 5);
-        // test.add("Gavroche", 6);
+        test.add(6, 6);
         // test.add("Fantine", 7);
         // test.add("Thenardier", 8);
         // test.add("Enjolras", 9);
