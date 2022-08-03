@@ -242,7 +242,7 @@ public class ChainedHashMap<K, V> extends AbstractIterableMap<K, V> {
                     if (itr == null)
                     {
                         index = i;
-                        itr = chains[index].entrySet().iterator();
+                        itr = chains[i].entrySet().iterator();
                     }
 
                     if (itr.hasNext())
