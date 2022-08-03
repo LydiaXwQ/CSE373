@@ -80,7 +80,7 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
 
         if (get(key) == null) {
             if (entries.length == size) {
-                SimpleEntry<K, V>[] newEntry = new SimpleEntry[entries.length * 2];
+                SimpleEntry[] newEntry = new SimpleEntry[entries.length * 2];
                 System.arraycopy(entries, 0, newEntry, 0, size);
                 entries = newEntry;
             }
@@ -141,8 +141,6 @@ public class ArrayMap<K, V> extends AbstractIterableMap<K, V> {
              entries[i] = null;
              size--;
          }
-        // entries = createArrayOfEntries(DEFAULT_INITIAL_CAPACITY);
-        // size = 0;
     }
 
     @Override
