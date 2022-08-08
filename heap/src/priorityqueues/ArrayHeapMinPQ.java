@@ -23,37 +23,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         items.add(0, null);
     }
 
-    // public static void main(String[] args) {
-    //     ExtrinsicMinPQ<Integer> test = new ArrayHeapMinPQ<>();
-    //     //159877, 60674, 48726, 24866, 113136, 108414, 18
-    //     test.add(159877, 159877);
-    //     test.add(60674, 60674);
-    //     test.add(48726, 48726);
-    //     test.add(24866, 24866);
-    //     // test.add(4, 4);
-    //     // test.add(5, 5);
-    //     // test.add(6, 6);
-    //     // test.add(7, 7);
-    //     // test.add("Fantine", 7);
-    //     // test.add("Thenardier", 8);
-    //     // test.add("Enjolras", 9);
-    //     // test.add("Grantaire", 10);
-    //     System.out.println(test.removeMin());
-    //     System.out.println(test.removeMin());
-    //     System.out.println(test.removeMin());
-    //     System.out.println(test.removeMin());
-    //     //System.out.println(test.removeMin());
-    //     // System.out.println(test.removeMin());
-    //     // System.out.println(test.removeMin());
-    //     // System.out.println(test.removeMin());
-    //     // System.out.println(test.removeMin());
-    //     // System.out.println(test.removeMin());
-    //     // test.removeMin();
-    //     // test.removeMin();
-    //     // test.removeMin();
-    //
-    // }
-
     // Here's a method stub that may be useful. Feel free to change or remove it, if you wish.
     // You'll probably want to add more helper methods like this one to make your code easier to read.
     /**
@@ -91,7 +60,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
             swap(parentIndex(index), index);
             index = parentIndex(index);
         }
-
 
     }
 
@@ -134,19 +102,12 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         items.add(size()+1, temp);
         hashMap.put(item, size());
         percolateUp(size());
-        // int index = size();
-        // while(priority < parentNode(index).getPriority && parentIndex(index) != 0){
-        //     swap(parentIndex(index), index)
-        //     index = parentIndex(index);
-        // }
 
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public boolean contains(T item) {
         return hashMap.containsKey(item);
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
@@ -156,7 +117,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         } else {
             return items.get(START_INDEX).getItem();
         }
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
@@ -174,8 +134,6 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         }
         return temp;
 
-
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
@@ -192,12 +150,10 @@ public class ArrayHeapMinPQ<T> implements ExtrinsicMinPQ<T> {
         } else {
             percolateDown(indexOfItem);
         }
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 
     @Override
     public int size() {
         return items.size()-1;
-        //throw new UnsupportedOperationException("Not implemented yet.");
     }
 }
