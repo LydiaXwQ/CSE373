@@ -50,7 +50,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
         Set<V> visited = new HashSet<>();
 
         edges.add(start, 0.0);
-        //Initiate starting vertext is start with a distance of 0
+        //Initiate starting vertext is start with a distance of 0.
         distTo.put(start, 0.0);
         edgeTo.put(start, null);
         //visited start
