@@ -60,13 +60,14 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
         while (!edges.isEmpty()) {
             startVertex = edges.removeMin();
             for (E edge : graph.outgoingEdgesFrom(startVertex)) {
-                if (!visited.contains(edge.to())) {
-                    distTo.put(edge.to(), Double.POSITIVE_INFINITY);
-                    edgeTo.put(edge.to(), edge);
-                    visited.add(edge.to());
-                    edges.add(edge.to(), Double.POSITIVE_INFINITY);
+                V tempVertex = edge.to();
+                if (!visited.contains(tempVertex)) {
+                    distTo.put(tempVertex, Double.POSITIVE_INFINITY);
+                    edgeTo.put(tempVertex, edge);
+                    visited.add(tempVertex);
+                    edges.add(tempVertex, Double.POSITIVE_INFINITY);
                 }
-                double oldDist = distTo.get(edge.to());
+                double oldDist = distTo.get(tempVertex);
                 double newDist = distTo.get(edge.from()) + edge.weight();
                 if (newDist < oldDist) {
                     distTo.put(edge.to(), newDist);
@@ -84,6 +85,8 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
 
     }
 
+
+    //Extracts the shortest path from start to end from the given shortest paths tree.
     @Override
     protected ShortestPath<V, E> extractShortestPath(Map<V, E> spt, V start, V end) {
         if (start.equals(end)) {
@@ -94,10 +97,17 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
             list.add(0, spt.get(end));
             V vertex = spt.get(end).from();
             while (!vertex.equals(start)) {
-                list.add(spt.get(vertex));
-                vertex = spt.get(vertex).from();
+                E tempEdge = spt.get(vertex);
+                list.add(tempEdge);
+                vertex = tempEdge.from();
             }
-            return new ShortestPath.Success<>(list);
+
+            List<E> list2 = new ArrayList<>();
+            for(int i = list.size()-1; i >= 0; i--){
+                list2.add(list.get(i));
+            }
+
+            return new ShortestPath.Success<>(list2);
         }
         return new ShortestPath.Failure<>();
     }
