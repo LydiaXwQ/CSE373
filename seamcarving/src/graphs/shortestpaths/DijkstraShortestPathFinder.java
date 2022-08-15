@@ -65,27 +65,25 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
 
         Map<V, Double> distTo = new HashMap<>();
         Set<V> known = new HashSet<>();
-        Set<V> visited = new HashSet<>();
+        //Set<V> visited = new HashSet<>();
 
         edges.add(start, 0.0);
         //Initiate starting vertext is start with a distance of 0.
         distTo.put(start, 0.0);
         //visited start
-        visited.add(start);
+        //visited.add(start);
 
         //while(!edges.isEmpty())
         while (!edges.isEmpty()) {
             startVertex = edges.removeMin();
             known.add(startVertex);
             for (E edge : graph.outgoingEdgesFrom(startVertex)) {
-                if(edge == null) {
-                    return edgeTo;
-                }
+
                 V tempVertex = edge.to();
-                if (!visited.contains(tempVertex)) {
+                if (!distTo.containsKey(tempVertex)) {
                     distTo.put(tempVertex, Double.POSITIVE_INFINITY);
                     edgeTo.put(tempVertex, edge);
-                    visited.add(tempVertex);
+                    //visited.add(tempVertex);
                     edges.add(tempVertex, Double.POSITIVE_INFINITY);
                 }
                 double oldDist = distTo.get(tempVertex);
@@ -95,7 +93,6 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
                     edgeTo.put(edge.to(), edge);
                     edges.changePriority(edge.to(), newDist);
                 }
-                //edges.add(edge.to(), newDist);
                 if (known.contains(end)) {
                     return edgeTo;
                 }
