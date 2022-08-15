@@ -52,14 +52,17 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
         edges.add(start, 0.0);
         //Initiate starting vertext is start with a distance of 0.
         distTo.put(start, 0.0);
-        edgeTo.put(start, null);
         //visited start
         visited.add(start);
 
         //while(!edges.isEmpty())
         while (!edges.isEmpty()) {
             startVertex = edges.removeMin();
+            known.add(startVertex);
             for (E edge : graph.outgoingEdgesFrom(startVertex)) {
+                if(edge == null) {
+                    return edgeTo;
+                }
                 V tempVertex = edge.to();
                 if (!visited.contains(tempVertex)) {
                     distTo.put(tempVertex, Double.POSITIVE_INFINITY);
@@ -75,7 +78,6 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
                     edges.changePriority(edge.to(), newDist);
                 }
                 //edges.add(edge.to(), newDist);
-                known.add(startVertex);
                 if (known.contains(end)) {
                     return edgeTo;
                 }
