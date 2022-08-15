@@ -37,6 +37,19 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
          */
     }
 
+    public static void main(String[] args){
+
+        // Graph<String, Edge<String>> graph = directedGraph(
+        //     edge("s", "w", 1),
+        //     edge("s", "u", 20),
+        //     edge("w", "x", 1),
+        //     edge("x", "u", 1),
+        //     edge("u", "v", 1),
+        //     edge("v", "t", 1)
+        // );
+
+    }
+
     private V startVertex;
 
     @Override
@@ -45,6 +58,11 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
 
         ExtrinsicMinPQ<V> edges = createMinPQ();
         Map<V, E> edgeTo = new HashMap<>();
+
+        if(start.equals(end)){
+            return edgeTo;
+        }
+
         Map<V, Double> distTo = new HashMap<>();
         Set<V> known = new HashSet<>();
         Set<V> visited = new HashSet<>();
@@ -91,6 +109,8 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
     //Extracts the shortest path from start to end from the given shortest paths tree.
     @Override
     protected ShortestPath<V, E> extractShortestPath(Map<V, E> spt, V start, V end) {
+
+
         if (start.equals(end)) {
             return new ShortestPath.SingleVertex<V, E>(start);
         }

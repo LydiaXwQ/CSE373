@@ -24,6 +24,8 @@ public class DijkstraSeamFinder implements SeamFinder {
         return new DijkstraShortestPathFinder<>();
     }
 
+    //public static Graph<V,E>
+
     @Override
     public List<Integer> findHorizontalSeam(double[][] energies) {
         // TODO: replace this with your code
