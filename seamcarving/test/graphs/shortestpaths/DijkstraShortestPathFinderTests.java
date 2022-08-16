@@ -41,6 +41,7 @@ public class DijkstraShortestPathFinderTests extends BaseGraphTests {
             edge("v", "t", 1)
         );
 
+
         assertThatShortestPathOf(graph, "s", "t")
             .hasVertices("s", "w", "x", "u", "v", "t")
             .hasWeightCloseTo(5);
