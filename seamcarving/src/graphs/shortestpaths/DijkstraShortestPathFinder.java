@@ -1,7 +1,5 @@
 package graphs.shortestpaths;
 
-import graphs.Edge;
-import graphs.EdgeWithData;
 import priorityqueues.ExtrinsicMinPQ;
 import priorityqueues.NaiveMinPQ;
 import graphs.BaseEdge;
@@ -59,7 +57,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
         ExtrinsicMinPQ<V> edges = createMinPQ();
         Map<V, E> edgeTo = new HashMap<>();
 
-        if(start.equals(end)){
+        if (start.equals(end)) {
             return edgeTo;
         }
 
@@ -122,7 +120,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
             }
 
             List<E> list2 = new ArrayList<>();
-            for(int i = list.size()-1; i >= 0; i--){
+            for (int i = list.size()-1; i >= 0; i--) {
                 list2.add(list.get(i));
             }
 
