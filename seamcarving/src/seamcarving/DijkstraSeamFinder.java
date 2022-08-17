@@ -42,7 +42,10 @@ public class DijkstraSeamFinder implements SeamFinder {
         DijkstraShortestPathFinder<MyGraph, vertex, Edge<vertex>> shortestPathFinder = new DijkstraShortestPathFinder<>();
         ShortestPath<vertex, Edge<vertex>> traversal = shortestPathFinder.findShortestPath(graph, graph.dummyFirst, graph.dummyLast);
         for(Edge<vertex> idk: traversal.edges()){
-            list.add(idk.from().col);
+            if(idk.to() == graph.dummyLast){
+                continue;
+            }
+            list.add(idk.to().col);
         }
 
         return list;
