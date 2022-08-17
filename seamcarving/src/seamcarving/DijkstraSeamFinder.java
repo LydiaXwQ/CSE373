@@ -122,22 +122,22 @@ public class DijkstraSeamFinder implements SeamFinder {
                     int tempX = element.row;
                     int tempY = element.col;
                     if(tempX == 0){
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY],
-                                                                motherload[tempX][tempY].energy ));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX+1][tempY],
-                                                                motherload[tempX+1][tempY].energy ));
+                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY+1],
+                                                                motherload[tempX][tempY+1].energy ));
+                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX+1][tempY+1],
+                                                                motherload[tempX+1][tempY+1].energy ));
                     } else if (tempX == dimensionRow-1){
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX-1][tempY],
-                                                                motherload[tempX-1][tempY].energy ));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY],
-                                                                motherload[tempX][tempY].energy ));
+                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX-1][tempY+1],
+                                                                motherload[tempX-1][tempY+1].energy ));
+                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY+1],
+                                                                motherload[tempX][tempY+1].energy ));
                     } else {
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX-1][tempY],
-                                                                motherload[tempX-1][tempY].energy ));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY],
-                                                                motherload[tempX][tempY].energy ));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX+1][tempY],
-                                                                motherload[tempX+1][tempY].energy ));
+                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX-1][tempY+1],
+                                                                motherload[tempX-1][tempY+1].energy ));
+                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY+1],
+                                                                motherload[tempX][tempY+1].energy ));
+                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX+1][tempY+1],
+                                                                motherload[tempX+1][tempY+1].energy ));
                     }
                 }
             }
