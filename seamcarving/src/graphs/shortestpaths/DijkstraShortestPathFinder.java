@@ -54,7 +54,7 @@ public class DijkstraShortestPathFinder<G extends Graph<V, E>, V, E extends Base
 
     @Override
     //Returns a (a map from vertex to preceding edge) containing the shortest path from start to end in given graph.
-        protected Map<V, E> constructShortestPathsTree(G graph, V start, V end) {
+    protected Map<V, E> constructShortestPathsTree(G graph, V start, V end) {
 
         ExtrinsicMinPQ<V> edges = createMinPQ();
         Map<V, E> edgeTo = new HashMap<>();
