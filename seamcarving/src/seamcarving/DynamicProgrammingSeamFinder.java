@@ -1,8 +1,11 @@
 package seamcarving;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.lang.Math;
+import java.util.Set;
 
 /**
  * Dynamic programming implementation of the {@link SeamFinder} interface.
@@ -11,129 +14,209 @@ import java.lang.Math;
  * @see SeamCarver
  */
 public class DynamicProgrammingSeamFinder implements SeamFinder {
+
+    private static class Node{
+        public int preRow;
+        public int preCol;
+        public double energy;
+
+        public Node(int preRow, int preCol, double energy) {
+            this.preRow = preRow;
+            this.preCol = preCol;
+            this.energy = energy;
+        }
+        public Node(double energy) {
+            this.energy = energy;
+        }
+
+    }
+
+
     @Override
     public List<Integer> findHorizontalSeam(double[][] energies) {
-        double[][] motherload = new double[energies.length][energies[0].length];
-        int[][] index = new int[energies.length][energies[0].length];
-        for (int i = 0; i < energies[0].length; i++) {
-            motherload[i][0] = energies[i][0];
-            index[i][0] = 0;
-        }
-        for (int i = 0; i < energies.length-1; i++) {
-            for (int j = 1; j < energies[0].length; j++) {
-
-                if(i==0){
-                    if(energies[i][j-1] < energies[i+1][j-1]) {
-                        index[i][j] = i;
-                    } else {
-                        index[i][j] = i+1;
-                    }
-                    motherload[i][j] = Math.min(energies[i][j-1], energies[i+1][j-1]) + energies[i][j];
-                } else if (i == energies[0].length-1) {
-                    if(energies[i][j-1] < energies[i-1][j-1]) {
-                        index[i][j] = i;
-                    } else {
-                        index[i][j] = i-1;
-                    }
-                    motherload[i][j] = Math.min(energies[i][j-1], energies[i-1][j-1]) + energies[i][j];
-                } else {
-                    if(energies[i][j-1] < energies[i-1][j-1]){
-                        index[i][j] = i;
-                    } else {
-                        index[i][j] = i-1;
-                    }
-
-                    if(energies[index[i][j]][j] > energies[i+1][j-1]){
-                        index[i][j] = i+1;
-                    }
-
-                    double temp = Math.min(energies[i][j-1], energies[i-1][j-1]);
-                    motherload[i][j] = Math.min(temp, energies[i+1][j-1]) + energies[i][j];
-                }
-
-            }
-        }
-        double curMin = motherload[1][energies[0].length-1];
-        int x = 1;
-        for (int i = 1; i < energies[0].length; i++) {
-            if(motherload[i][energies[0].length-1] < curMin){
-                curMin = motherload[i][energies[0].length-1];
-                x = i;
-            }
-        }
-
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(x);
-        for(int i = energies[0].length-1; i>0; i-- ){
-            list.add(index[x][i]);
-            x = index[x][i];
-        }
-
-        return list;
+        //
+        // for(int i = 0; i < energies.length; i++) {
+        //     for(int j  = 0; j < energies[0].length; j++) {
+        //         System.out.print(energies[i][j] + " ");
+        //     }
+        //     System.out.println();
+        // }
+        // int numberOfCol = energies[0].length;
+        // int numberOfRow = energies.length;
+        // Node[][] table = new Node[numberOfRow][numberOfCol];
+        // Set<Double> processed = new HashSet<>();
+        //
+        // for(int i = 0; i < numberOfRow; i++) {
+        //     table[i][0] = new Node(i, 0, energies[i][0]);
+        // }
+        // for(int col = 0; col < numberOfCol - 1; col++){
+        //     for(int row = 0; row < numberOfRow; row++){
+        //         double tempEnergy = table[row][col].energy;
+        //         if (row == 0) {
+        //             double rightEnergy = energies[row][col + 1];
+        //             if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
+        //                 table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
+        //                 processed.add(rightEnergy);
+        //             }
+        //
+        //             double bottomRightEnergy = energies[row + 1][col + 1];
+        //             if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
+        //                 table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
+        //                 processed.add(bottomRightEnergy);
+        //             }
+        //
+        //         } else if (row == numberOfRow - 1) {
+        //             double rightEnergy = energies[row][col + 1];
+        //             if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
+        //                 table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
+        //                 processed.add(rightEnergy);
+        //             }
+        //
+        //             double topRightEnergy = energies[row - 1][col + 1];
+        //             if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
+        //                 table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
+        //                 processed.add(topRightEnergy);
+        //             }
+        //         } else {
+        //             double rightEnergy = energies[row][col + 1];
+        //             if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
+        //                 table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
+        //                 processed.add(rightEnergy);
+        //             }
+        //
+        //             double topRightEnergy = energies[row - 1][col + 1];
+        //             if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
+        //                 table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
+        //                 processed.add(topRightEnergy);
+        //             }
+        //
+        //             double bottomRightEnergy = energies[row + 1][col + 1];
+        //             if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
+        //                 table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
+        //                 processed.add(bottomRightEnergy);
+        //             }
+        //         }
+        //     }
+        // }
+        // System.out.println();
+        // for(int i = 0; i < energies.length; i++) {
+        //     for(int j  = 0; j < energies[0].length; j++) {
+        //         System.out.print(table[i][j].energy + " ");
+        //     }
+        //     System.out.println();
+        // }
+        //
+        // List<Integer> result = new ArrayList<>(numberOfCol);
+        // Node min = table[0][numberOfCol - 1];
+        // result.add(0, 0);
+        // for(int i = 1; i < numberOfRow; i++) {
+        //     if(min.energy > table[i][numberOfCol - 1].energy) {
+        //         min =  table[i][numberOfCol - 1];l
+        //         result.set(0, i);
+        //     }
+        // }
+        //
+        //
+        // for(int i = 1; i < numberOfCol; i++) {
+        //     result.add(min.preRow);
+        //     min = table[min.preRow][min.preCol];
+        // }
+        // return result;
+        return null;
     }
 
     @SuppressWarnings({"checkstyle:WhitespaceAfter", "checkstyle:EmptyBlock"})
     @Override
     public List<Integer> findVerticalSeam(double[][] energies) {
-        // replace this with your code
 
-        double[][] motherload = new double[energies.length][energies[0].length];
-        int[][] index = new int[energies.length][energies[0].length];
-        for (int i = 0; i < energies[0].length; i++) {
-            motherload[i][0] = energies[i][0];
-            index[i][0] = 0;
+        // for(int i = 0; i < energies.length; i++) {
+        //     for(int j  = 0; j < energies[0].length; j++) {
+        //         System.out.print(energies[i][j] + " ");
+        //     }
+        //     System.out.println();
+        // }
+        int numberOfCol = energies[0].length;
+        int numberOfRow = energies.length;
+        Node[][] table = new Node[numberOfRow][numberOfCol];
+        Set<Double> processed = new HashSet<>();
+
+        for(int i = 0; i < numberOfRow; i++) {
+            table[i][0] = new Node(i, 0, energies[i][0]);
         }
-        for (int i = 0; i < energies.length-1; i++) {
-            for (int j = 1; j < energies[0].length; j++) {
+        for(int col = 0; col < numberOfCol - 1; col++){
+            for(int row = 0; row < numberOfRow; row++){
+                double tempEnergy = table[row][col].energy;
+                if (row == 0) {
+                    double rightEnergy = energies[row][col + 1];
+                    if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
+                        table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
+                        processed.add(rightEnergy);
+                    }
 
-                if(i==0){
-                    if(energies[i][j-1] < energies[i+1][j-1]) {
-                        index[i][j] = i;
-                    } else {
-                        index[i][j] = i+1;
+                    double bottomRightEnergy = energies[row + 1][col + 1];
+                    if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
+                        table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
+                        processed.add(bottomRightEnergy);
                     }
-                    motherload[i][j] = Math.min(energies[i][j-1], energies[i+1][j-1]) + energies[i][j];
-                } else if (i == energies[0].length-1) {
-                    if(energies[i][j-1] < energies[i-1][j-1]) {
-                        index[i][j] = i;
-                    } else {
-                        index[i][j] = i-1;
+
+                } else if (row == numberOfRow - 1) {
+                    double rightEnergy = energies[row][col + 1];
+                    if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
+                        table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
+                        processed.add(rightEnergy);
                     }
-                    motherload[i][j] = Math.min(energies[i][j-1], energies[i-1][j-1]) + energies[i][j];
+
+                    double topRightEnergy = energies[row - 1][col + 1];
+                    if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
+                        table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
+                        processed.add(topRightEnergy);
+                    }
                 } else {
-                    if(energies[i][j-1] < energies[i-1][j-1]){
-                        index[i][j] = i;
-                    } else {
-                        index[i][j] = i-1;
+                    double rightEnergy = energies[row][col + 1];
+                    if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
+                        table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
+                        processed.add(rightEnergy);
                     }
 
-                    if(energies[index[i][j]][j] > energies[i+1][j-1]){
-                        index[i][j] = i+1;
+                    double topRightEnergy = energies[row - 1][col + 1];
+                    if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
+                        table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
+                        processed.add(topRightEnergy);
                     }
 
-                    double temp = Math.min(energies[i][j-1], energies[i-1][j-1]);
-                    motherload[i][j] = Math.min(temp, energies[i+1][j-1]) + energies[i][j];
+                    double bottomRightEnergy = energies[row + 1][col + 1];
+                    if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
+                        table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
+                        processed.add(bottomRightEnergy);
+                    }
                 }
-
-            }
-        }
-        double curMin = motherload[1][energies[0].length-1];
-        int x = 1;
-        for (int i = 1; i < energies[0].length; i++) {
-            if(motherload[i][energies[0].length-1] < curMin){
-                curMin = motherload[i][energies[0].length-1];
-                x = i;
             }
         }
 
-        ArrayList<Integer> list = new ArrayList<>();
-        list.add(x);
-        for(int i = energies[0].length-1; i>=0; i-- ){
-            list.add(index[x][i]);
-            x = index[x][i];
+        // System.out.println();
+        // for(int i = 0; i < energies.length; i++) {
+        //     for(int j  = 0; j < energies[0].length; j++) {
+        //         System.out.print(table[i][j].energy + " ");
+        //     }
+        //     System.out.println();
+        // }
+
+        List<Integer> result = new ArrayList<>(numberOfCol);
+        Node min = table[0][numberOfCol - 1];
+        result.add(0, 0);
+        for(int i = 1; i < numberOfRow; i++) {
+            if(min.energy > table[i][numberOfCol - 1].energy) {
+                min =  table[i][numberOfCol - 1];
+                result.set(0, i);
+            }
         }
 
-       return list;
+        for(int i = 1; i < numberOfCol; i++) {
+            result.add(min.preRow);
+            min = table[min.preRow][min.preCol];
+        }
+        Collections.reverse(result);
+        return result;
     }
 
 
