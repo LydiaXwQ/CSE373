@@ -73,7 +73,7 @@ public class DijkstraSeamFinder implements SeamFinder {
         double energy;
         int row;
         int col;
-        ArrayList<Edge<Vertex>> outgoingVertexes = new ArrayList<>();
+        ArrayList<Edge<Vertex>> outgoingEdges = new ArrayList<>();
         public Vertex(double energy, int col, int row) {
             this.energy = energy;
             this.row = row;
@@ -94,7 +94,7 @@ public class DijkstraSeamFinder implements SeamFinder {
 
         @Override
         public Collection<Edge<Vertex>> outgoingEdgesFrom(Vertex vertex) {
-            return vertex.outgoingVertexes;
+            return vertex.outgoingEdges;
         }
 
         public MyGraph(double[][] table, boolean horOrVer) {
@@ -131,7 +131,7 @@ public class DijkstraSeamFinder implements SeamFinder {
 
             for (int i = 0; i < dimensionRow; i++) {
                 Vertex addVertex= motherload[i][0];
-                dummyFirst.outgoingVertexes.add(new Edge<>(dummyFirst, addVertex, addVertex.energy));
+                dummyFirst.outgoingEdges.add(new Edge<>(dummyFirst, addVertex, addVertex.energy));
 
             }
 
@@ -140,28 +140,28 @@ public class DijkstraSeamFinder implements SeamFinder {
                 for (Vertex element: outerLoop) {
 
                     if (element.col == dimensionCol-1) {
-                        element.outgoingVertexes.add(new Edge<>(element, dummyLast, 0));
+                        element.outgoingEdges.add(new Edge<>(element, dummyLast, 0));
                         continue;
                     }
 
                     int tempX = element.row;
                     int tempY = element.col;
                     if (tempX == 0) {
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY+1],
+                        element.outgoingEdges.add(new Edge<>(element, motherload[tempX][tempY+1],
                                                                 motherload[tempX][tempY+1].energy));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX+1][tempY+1],
+                        element.outgoingEdges.add(new Edge<>(element, motherload[tempX+1][tempY+1],
                                                                 motherload[tempX+1][tempY+1].energy));
                     } else if (tempX == dimensionRow-1) {
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX-1][tempY+1],
+                        element.outgoingEdges.add(new Edge<>(element, motherload[tempX-1][tempY+1],
                                                                 motherload[tempX-1][tempY+1].energy));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY+1],
+                        element.outgoingEdges.add(new Edge<>(element, motherload[tempX][tempY+1],
                                                                 motherload[tempX][tempY+1].energy));
                     } else {
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX-1][tempY+1],
+                        element.outgoingEdges.add(new Edge<>(element, motherload[tempX-1][tempY+1],
                                                                 motherload[tempX-1][tempY+1].energy));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX][tempY+1],
+                        element.outgoingEdges.add(new Edge<>(element, motherload[tempX][tempY+1],
                                                                 motherload[tempX][tempY+1].energy));
-                        element.outgoingVertexes.add(new Edge<>(element, motherload[tempX+1][tempY+1],
+                        element.outgoingEdges.add(new Edge<>(element, motherload[tempX+1][tempY+1],
                                                                 motherload[tempX+1][tempY+1].energy));
                     }
                 }
