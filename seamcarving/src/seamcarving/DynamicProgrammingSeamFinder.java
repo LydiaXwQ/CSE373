@@ -1,11 +1,9 @@
 package seamcarving;
 
+
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
+
 import java.util.List;
-import java.lang.Math;
-import java.util.Set;
 
 /**
  * Dynamic programming implementation of the {@link SeamFinder} interface.
@@ -14,209 +12,251 @@ import java.util.Set;
  * @see SeamCarver
  */
 public class DynamicProgrammingSeamFinder implements SeamFinder {
+    private int height;
+    private int width;
+    private double intermediate = 0;
+    private double x;
+    private double left;
+    private double upleft;
+    private double bottomleft;
 
-    private static class Node{
-        public int preRow;
-        public int preCol;
-        public double energy;
 
-        public Node(int preRow, int preCol, double energy) {
-            this.preRow = preRow;
-            this.preCol = preCol;
-            this.energy = energy;
-        }
-        public Node(double energy) {
-            this.energy = energy;
-        }
-
-    }
+    ArrayList<Integer> n = new ArrayList<>();
 
 
     @Override
     public List<Integer> findHorizontalSeam(double[][] energies) {
-        //
-        // for(int i = 0; i < energies.length; i++) {
-        //     for(int j  = 0; j < energies[0].length; j++) {
-        //         System.out.print(energies[i][j] + " ");
-        //     }
-        //     System.out.println();
-        // }
-        // int numberOfCol = energies[0].length;
-        // int numberOfRow = energies.length;
-        // Node[][] table = new Node[numberOfRow][numberOfCol];
-        // Set<Double> processed = new HashSet<>();
-        //
-        // for(int i = 0; i < numberOfRow; i++) {
-        //     table[i][0] = new Node(i, 0, energies[i][0]);
-        // }
-        // for(int col = 0; col < numberOfCol - 1; col++){
-        //     for(int row = 0; row < numberOfRow; row++){
-        //         double tempEnergy = table[row][col].energy;
-        //         if (row == 0) {
-        //             double rightEnergy = energies[row][col + 1];
-        //             if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
-        //                 table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
-        //                 processed.add(rightEnergy);
-        //             }
-        //
-        //             double bottomRightEnergy = energies[row + 1][col + 1];
-        //             if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
-        //                 table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
-        //                 processed.add(bottomRightEnergy);
-        //             }
-        //
-        //         } else if (row == numberOfRow - 1) {
-        //             double rightEnergy = energies[row][col + 1];
-        //             if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
-        //                 table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
-        //                 processed.add(rightEnergy);
-        //             }
-        //
-        //             double topRightEnergy = energies[row - 1][col + 1];
-        //             if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
-        //                 table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
-        //                 processed.add(topRightEnergy);
-        //             }
-        //         } else {
-        //             double rightEnergy = energies[row][col + 1];
-        //             if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
-        //                 table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
-        //                 processed.add(rightEnergy);
-        //             }
-        //
-        //             double topRightEnergy = energies[row - 1][col + 1];
-        //             if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
-        //                 table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
-        //                 processed.add(topRightEnergy);
-        //             }
-        //
-        //             double bottomRightEnergy = energies[row + 1][col + 1];
-        //             if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
-        //                 table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
-        //                 processed.add(bottomRightEnergy);
-        //             }
-        //         }
-        //     }
-        // }
-        // System.out.println();
-        // for(int i = 0; i < energies.length; i++) {
-        //     for(int j  = 0; j < energies[0].length; j++) {
-        //         System.out.print(table[i][j].energy + " ");
-        //     }
-        //     System.out.println();
-        // }
-        //
-        // List<Integer> result = new ArrayList<>(numberOfCol);
-        // Node min = table[0][numberOfCol - 1];
-        // result.add(0, 0);
-        // for(int i = 1; i < numberOfRow; i++) {
-        //     if(min.energy > table[i][numberOfCol - 1].energy) {
-        //         min =  table[i][numberOfCol - 1];l
-        //         result.set(0, i);
-        //     }
-        // }
-        //
-        //
-        // for(int i = 1; i < numberOfCol; i++) {
-        //     result.add(min.preRow);
-        //     min = table[min.preRow][min.preCol];
-        // }
-        // return result;
-        return null;
-    }
+        height = energies[0].length;
+        width = energies.length;
+        double[][] leastEnergy = new double[height][width];
+        int[][] index = new int[height][width];
 
-    @SuppressWarnings({"checkstyle:WhitespaceAfter", "checkstyle:EmptyBlock"})
-    @Override
-    public List<Integer> findVerticalSeam(double[][] energies) {
 
-        // for(int i = 0; i < energies.length; i++) {
-        //     for(int j  = 0; j < energies[0].length; j++) {
-        //         System.out.print(energies[i][j] + " ");
-        //     }
-        //     System.out.println();
-        // }
-        int numberOfCol = energies[0].length;
-        int numberOfRow = energies.length;
-        Node[][] table = new Node[numberOfRow][numberOfCol];
-        Set<Double> processed = new HashSet<>();
-
-        for(int i = 0; i < numberOfRow; i++) {
-            table[i][0] = new Node(i, 0, energies[i][0]);
+        for (int i = 0; i < height; i++) {
+            leastEnergy[i][0] = energies[0][i];
+            index[i][0] = i;
         }
-        for(int col = 0; col < numberOfCol - 1; col++){
-            for(int row = 0; row < numberOfRow; row++){
-                double tempEnergy = table[row][col].energy;
-                if (row == 0) {
-                    double rightEnergy = energies[row][col + 1];
-                    if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
-                        table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
-                        processed.add(rightEnergy);
-                    }
 
-                    double bottomRightEnergy = energies[row + 1][col + 1];
-                    if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
-                        table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
-                        processed.add(bottomRightEnergy);
-                    }
+        //if it is at the first row, we do x, y-1; x+1, y-1
 
-                } else if (row == numberOfRow - 1) {
-                    double rightEnergy = energies[row][col + 1];
-                    if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
-                        table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
-                        processed.add(rightEnergy);
-                    }
+        for (int i = 1; i < width; i++) {
+            for (int j = 0; j < height; j++) {
 
-                    double topRightEnergy = energies[row - 1][col + 1];
-                    if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
-                        table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
-                        processed.add(topRightEnergy);
+                //at the top row
+                if (j == 0) {
+                    //x=1,0 left = 0, 0 downleft = 0,1
+                    x = energies[i][j];
+                    left = leastEnergy[j][i - 1];
+                    bottomleft = leastEnergy[j + 1][i - 1];
+                    //left small
+                    if (x + left < x + bottomleft) {
+                        leastEnergy[j][i] = x + left;
+                        index[j][i] = j;
+                        //bottom left small
+                    } else {
+                        leastEnergy[j][i] = x + bottomleft;
+                        index[j][i] = j + 1;
                     }
+                    //at the bottom row
+                } else if (j == height - 1) {
+                    //x=1,5 left = 0, 5 upleft = 0,4
+                    x = energies[i][j];
+                    left = leastEnergy[j][i - 1];
+                    upleft = leastEnergy[j - 1][i - 1];
+                    //left small
+                    if (x + left < x + upleft) {
+                        leastEnergy[j][i] = x + left;
+                        index[j][i] = j;
+                        //upleft small
+                    } else {
+                        leastEnergy[j][i] = x + upleft;
+                        index[j][i] = j - 1;
+                    }
+                    //at the middle
                 } else {
-                    double rightEnergy = energies[row][col + 1];
-                    if (!processed.contains(rightEnergy) || tempEnergy + rightEnergy < table[row][col + 1].energy) {
-                        table[row][col + 1] = new Node(row, col, tempEnergy + rightEnergy);
-                        processed.add(rightEnergy);
+                    // x=1,2 left = 0, 2, upleft = 0,1 downleft = 0, 3
+                    x = energies[i][j];
+                    left = leastEnergy[j][i - 1];
+                    upleft = leastEnergy[j - 1][i - 1];
+                    bottomleft = leastEnergy[j + 1][i - 1];
+                    double minVal = Math.min(left, upleft);
+                    //left small
+                    if (left == minVal) {
+                        index[j][i] = j;
+                        intermediate = left;
+                        //upleft small
+                    } else {
+                        index[j][i] = j - 1;
+                        intermediate = upleft;
                     }
-
-                    double topRightEnergy = energies[row - 1][col + 1];
-                    if(!processed.contains(topRightEnergy) || tempEnergy + topRightEnergy < table[row - 1][col + 1].energy) {
-                        table[row - 1][col + 1] = new Node(row, col, tempEnergy + topRightEnergy);
-                        processed.add(topRightEnergy);
-                    }
-
-                    double bottomRightEnergy = energies[row + 1][col + 1];
-                    if(!processed.contains(bottomRightEnergy) || tempEnergy + bottomRightEnergy < table[row + 1][col + 1].energy) {
-                        table[row + 1][col + 1] = new Node(row, col, tempEnergy + bottomRightEnergy);
-                        processed.add(bottomRightEnergy);
+                    //use the smaller value(left/upleft) to compare with bottomleft
+                    double minimumVal = Math.min(intermediate, bottomleft);
+                    // pops up a left/upleft/bottomleft small
+                    leastEnergy[j][i] = x + minimumVal;
+                    if (minimumVal == bottomleft) {
+                        index[j][i] = j + 1;
+                        //if left/upleft is smaller
+                    } else if (minimumVal == left) {
+                        index[j][i] = j;
+                        //if upleft is smaller
+                    } else {
+                        index[j][i] = j - 1;
                     }
                 }
             }
         }
+        //if it is at the bottom row, we do x, y-1; x-1, y-1
+        // Otherwise, we do x-1, y-1; x, y-1; x+1, y-1
+        //find the minimum value in the last col:
+        int minIndex = getMinIndex(leastEnergy, width, height);
 
-        // System.out.println();
-        // for(int i = 0; i < energies.length; i++) {
-        //     for(int j  = 0; j < energies[0].length; j++) {
-        //         System.out.print(table[i][j].energy + " ");
-        //     }
-        //     System.out.println();
-        // }
+        //put minIndex at the last col, and search for predecessor in Index matrix:
+        //
+        n.add(minIndex);
+        //predecessor=(1,5) stored value: (1,4)
+        int predecessor = index[minIndex][width - 1];
 
-        List<Integer> result = new ArrayList<>(numberOfCol);
-        Node min = table[0][numberOfCol - 1];
-        result.add(0, 0);
-        for(int i = 1; i < numberOfRow; i++) {
-            if(min.energy > table[i][numberOfCol - 1].energy) {
-                min =  table[i][numberOfCol - 1];
-                result.set(0, i);
+        for (int i = width - 2; i >= 0; i--) {
+            //(5,1; 4,1; add 3,2)
+            //predecessor = (3,2)
+            n.add(predecessor);
+            predecessor = index[predecessor][i];
+
+        }
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = n.size() - 1; i >= 0; i--) {
+            //(5,1; 4,1; add 3,2)
+            //predecessor = (3,2)
+            result.add(n.get(i));
+        }
+
+        return result;
+    }
+
+
+    @Override
+    public List<Integer> findVerticalSeam(double[][] energies) {
+
+        width = energies[0].length;
+        height = energies.length;
+        double[][] leastEnergy = new double[height][width];
+        int[][] index = new int[height][width];
+
+
+        for (int i = 0; i < height; i++) {
+            leastEnergy[0][i] = energies[i][0];
+            index[0][i] = i;
+        }
+
+        //if it is at the first row, we do x, y-1; x+1, y-1
+
+        for (int i = 1; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+
+                //at the top row
+                if (i == 0) {
+                    //x=1,0 left = 0, 0 downleft = 0,1
+                    x = energies[j][i];
+                    left = leastEnergy[i][j - 1];
+                    bottomleft = leastEnergy[i + 1][j - 1];
+                    //left small
+                    if (x + left < x + bottomleft) {
+                        leastEnergy[i][j] = x + left;
+                        index[i][i] = i;
+                        //bottom left small
+                    } else {
+                        leastEnergy[i][j] = x + bottomleft;
+                        index[i][j] = i + 1;
+                    }
+                    //at the bottom row
+                } else if (i == height - 1) {
+                    //x=1,5 left = 0, 5 upleft = 0,4
+                    x = energies[j][i];
+                    left = leastEnergy[i][j - 1];
+                    upleft = leastEnergy[i - 1][j - 1];
+                    //left small
+                    if (x + left < x + upleft) {
+                        leastEnergy[i][j] = x + left;
+                        index[i][j] = i;
+                        //upleft small
+                    } else {
+                        leastEnergy[i][j] = x + upleft;
+                        index[i][j] = i - 1;
+                    }
+                    //at the middle
+                } else {
+                    // x=1,2 left = 0, 2, upleft = 0,1 downleft = 0, 3
+                    x = energies[j][i];
+                    left = leastEnergy[i][j - 1];
+                    upleft = leastEnergy[i - 1][j - 1];
+                    bottomleft = leastEnergy[i + 1][j - 1];
+                    double minVal = Math.min(left, upleft);
+                    //left small
+                    if (left == minVal) {
+                        index[i][j] = i;
+                        intermediate = left;
+                        //upleft small
+                    } else {
+                        index[i][j] = i - 1;
+                        intermediate = upleft;
+                    }
+                    //use the smaller value(left/upleft) to compare with bottomleft
+                    double minimumVal = Math.min(intermediate, bottomleft);
+                    // pops up a left/upleft/bottomleft small
+                    leastEnergy[i][j] = x + minimumVal;
+                    if (minimumVal == bottomleft) {
+                        index[i][j] = i + 1;
+                        //if left/upleft is smaller
+                    } else if (minimumVal == left) {
+                        index[i][j] = i;
+                        //if upleft is smaller
+                    } else {
+                        index[i][j] = i - 1;
+                    }
+                }
+            }
+        }
+        //if it is at the bottom row, we do x, y-1; x-1, y-1
+        // Otherwise, we do x-1, y-1; x, y-1; x+1, y-1
+        //find the minimum value in the last col:
+        int minIndex = getMinIndex(leastEnergy, width, height);
+
+        //put minIndex at the last col, and search for predecessor in Index matrix:
+        //
+        n.add(minIndex);
+        //predecessor=(1,5) stored value: (1,4)
+        int predecessor = index[minIndex][width - 1];
+
+        for (int i = width - 2; i >= 0; i--) {
+            //(5,1; 4,1; add 3,2)
+            //predecessor = (3,2)
+            n.add(predecessor);
+            predecessor = index[predecessor][i];
+
+        }
+        ArrayList<Integer> result = new ArrayList<>();
+        for (int i = n.size() - 1; i >= 0; i--) {
+            //(5,1; 4,1; add 3,2)
+            //predecessor = (3,2)
+            result.add(n.get(i));
+        }
+
+        return result;
+
+    }
+
+    private static int getMinIndex(double[][] leastEnergy, int width, int height) {
+        double minVal = leastEnergy[0][width - 1];
+        int minIndex = 0;
+
+        for (int i = 1; i < height; i++) {
+            if (leastEnergy[i][width - 1] < minVal) {
+                minVal = leastEnergy[i][width - 1];
+                minIndex = i;
             }
         }
 
-        for(int i = 1; i < numberOfCol; i++) {
-            result.add(min.preRow);
-            min = table[min.preRow][min.preCol];
-        }
-        Collections.reverse(result);
-        return result;
+        return minIndex;
     }
 
 
