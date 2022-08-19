@@ -23,7 +23,7 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
 
     ArrayList<Integer> n = new ArrayList<>();
 
-
+    //push change base
     @Override
     public List<Integer> findHorizontalSeam(double[][] energies) {
         height = energies[0].length;
