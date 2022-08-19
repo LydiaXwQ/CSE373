@@ -136,68 +136,69 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
 
     @Override
     public List<Integer> findVerticalSeam(double[][] energies) {
+        height = energies[0].length;
+        width = energies.length;
 
-        width = energies[0].length;
-        height = energies.length;
         double[][] leastEnergy = new double[height][width];
         int[][] index = new int[height][width];
 
 
         for (int i = 0; i < height; i++) {
+            //fill the top row
             leastEnergy[0][i] = energies[i][0];
             index[0][i] = i;
         }
 
         //if it is at the first row, we do x, y-1; x+1, y-1
 
-        for (int i = 1; i < width; i++) {
-            for (int j = 0; j < height; j++) {
+        for (int i = 1; i < height; i++) {
+            for (int j = 0; j < width; j++) {
 
                 //at the top row
-                if (i == 0) {
+                if (j == 0) {
                     //x=1,0 left = 0, 0 downleft = 0,1
                     x = energies[j][i];
-                    left = leastEnergy[i][j - 1];
-                    bottomleft = leastEnergy[i + 1][j - 1];
+                    left = leastEnergy[i - 1][j];
+                    bottomleft = leastEnergy[i - 1][j + 1];
                     //left small
                     if (x + left < x + bottomleft) {
                         leastEnergy[i][j] = x + left;
-                        index[i][i] = i;
+                        index[i][j] = j;
                         //bottom left small
                     } else {
                         leastEnergy[i][j] = x + bottomleft;
-                        index[i][j] = i + 1;
+                        index[i][j] = j + 1;
                     }
                     //at the bottom row
-                } else if (i == height - 1) {
+                } else if (j == width - 1) {
                     //x=1,5 left = 0, 5 upleft = 0,4
-                    x = energies[j][i];
-                    left = leastEnergy[i][j - 1];
+                    x = energies[i][j];
+                    left = leastEnergy[i - 1][j];
                     upleft = leastEnergy[i - 1][j - 1];
                     //left small
                     if (x + left < x + upleft) {
                         leastEnergy[i][j] = x + left;
-                        index[i][j] = i;
+                        index[i][j] = j;
                         //upleft small
                     } else {
                         leastEnergy[i][j] = x + upleft;
-                        index[i][j] = i - 1;
+                        index[i][j] = j - 1;
                     }
                     //at the middle
                 } else {
                     // x=1,2 left = 0, 2, upleft = 0,1 downleft = 0, 3
-                    x = energies[j][i];
-                    left = leastEnergy[i][j - 1];
+                    x = energies[i][j];
+                    left = leastEnergy[i - 1][j];
                     upleft = leastEnergy[i - 1][j - 1];
-                    bottomleft = leastEnergy[i + 1][j - 1];
+                    bottomleft = leastEnergy[i - 1][j + 1];
                     double minVal = Math.min(left, upleft);
                     //left small
                     if (left == minVal) {
-                        index[i][j] = i;
+                        index[i][j] = j;
                         intermediate = left;
                         //upleft small
                     } else {
-                        index[i][j] = i - 1;
+                        index[i][j] = j - 1;
                         intermediate = upleft;
                     }
                     //use the smaller value(left/upleft) to compare with bottomleft
@@ -205,13 +206,13 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
                     // pops up a left/upleft/bottomleft small
                     leastEnergy[i][j] = x + minimumVal;
                     if (minimumVal == bottomleft) {
-                        index[i][j] = i + 1;
+                        index[i][j] = j + 1;
                         //if left/upleft is smaller
                     } else if (minimumVal == left) {
-                        index[i][j] = i;
+                        index[i][j] = j;
                         //if upleft is smaller
                     } else {
-                        index[i][j] = i - 1;
+                        index[i][j] = j - 1;
                     }
                 }
             }
@@ -219,19 +220,19 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
         //if it is at the bottom row, we do x, y-1; x-1, y-1
         // Otherwise, we do x-1, y-1; x, y-1; x+1, y-1
         //find the minimum value in the last col:
-        int minIndex = getMinIndex(leastEnergy, width, height);
+        int minIndex = getMinIndex(leastEnergy, height, width);
 
         //put minIndex at the last col, and search for predecessor in Index matrix:
         //
         n.add(minIndex);
         //predecessor=(1,5) stored value: (1,4)
-        int predecessor = index[minIndex][width - 1];
+        int predecessor = index[minIndex][height - 1];
 
-        for (int i = width - 2; i >= 0; i--) {
+        for (int i = height - 2; i >= 0; i--) {
             //(5,1; 4,1; add 3,2)
             //predecessor = (3,2)
             n.add(predecessor);
-            predecessor = index[predecessor][i];
+            predecessor = index[i][predecessor];
 
         }
         ArrayList<Integer> result = new ArrayList<>();
@@ -245,6 +246,19 @@ public class DynamicProgrammingSeamFinder implements SeamFinder {
 
     }
 
+    // private static int getMinIndex(double[][] leastEnergy, int height, int width) {
+    //     double minVal = leastEnergy[height-1][0];
+    //     int minIndex = 0;
+    //
+    //     for (int i = 1; i < width; i++) {
+    //         if (leastEnergy[height-1][i] < minVal) {
+    //             minVal = leastEnergy[height-1][i];
+    //             minIndex = i;
+    //         }
+    //     }
+    //
+    //     return minIndex;
+    // }
     private static int getMinIndex(double[][] leastEnergy, int width, int height) {
         double minVal = leastEnergy[0][width - 1];
         int minIndex = 0;
