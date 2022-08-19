@@ -26,7 +26,9 @@ public class DijkstraSeamFinder implements SeamFinder {
     }
 
     public static void main(String[] args){
-
+        int[][] test = {{1,2}, {3,4}, {5, 6}};
+        System.out.println(test.length);
+        System.out.println(test[0].length);
     }
 
     @Override
